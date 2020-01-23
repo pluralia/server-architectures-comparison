@@ -22,4 +22,6 @@ public class Sort {
 
         return copy;
     }
+
+    private Sort() {}
 }
