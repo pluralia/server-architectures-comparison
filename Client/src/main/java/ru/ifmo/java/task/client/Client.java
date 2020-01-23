@@ -5,20 +5,27 @@ import ru.ifmo.java.task.protocol.Protocol.Request;
 import ru.ifmo.java.task.protocol.Protocol.Response;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
 
 public class Client {
     private int port;
+
     private Socket socket;
+    private InputStream input;
+    private OutputStream output;
 
     public Client(int port) {
         this.port = port;
     }
 
     public void run() throws IOException {
-        socket = new Socket(Constants.LOCALHOST, port);
+        socket = new Socket(Constants.HOST, port);
+        input = socket.getInputStream();
+        output = socket.getOutputStream();
 
         try {
             sendRequest(Arrays.asList(4, 3, 4, 6, 7, 8, 3));
@@ -31,15 +38,18 @@ public class Client {
     }
 
     private void sendRequest(List<Integer> arr) throws IOException {
-        Request.newBuilder()
+        Request request = Request.newBuilder()
                 .setSize(arr.size())
                 .addAllElem(arr)
-                .build()
-                .writeDelimitedTo(socket.getOutputStream());
+                .build();
+
+//        output.write(request.getSize());
+        request.writeDelimitedTo(output);
+        output.flush();
     }
 
     private void receiveResponse() throws IOException {
-        Response response = Response.parseDelimitedFrom(socket.getInputStream());
+        Response response = Response.parseDelimitedFrom(input);
 
         System.out.println(response.getSize());
         for (int i : response.getElemList()) {

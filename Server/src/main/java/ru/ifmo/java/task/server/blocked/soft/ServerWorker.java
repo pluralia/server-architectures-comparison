@@ -1,6 +1,6 @@
 package ru.ifmo.java.task.server.blocked.soft;
 
-import ru.ifmo.java.task.Sort;
+import ru.ifmo.java.task.Constants;
 import ru.ifmo.java.task.protocol.Protocol.*;
 
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class ServerWorker implements Runnable {
     private void processRequest(Request request) throws IOException {
         Response.newBuilder()
                 .setSize(request.getSize())
-                .addAllElem(Sort.bubbleSort(request.getElemList()))
+                .addAllElem(Constants.SORT.apply(request.getElemList()))
                 .build()
                 .writeDelimitedTo(output);
     }
