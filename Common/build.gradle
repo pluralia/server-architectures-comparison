@@ -1,0 +1,16 @@
+apply {
+    plugin("com.google.protobuf")
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.10.1"
+    }
+    plugins {
+        lite {
+            artifact = "com.google.protobuf:protoc-gen-javalite:3.10.1"
+        }
+    }
+
+    generatedFilesBaseDir = "$projectDir/src"
+}

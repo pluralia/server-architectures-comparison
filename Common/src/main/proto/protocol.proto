@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package ru.ifmo.java.task.protocol;
+
+message Request {
+    int32 size = 1;
+    repeated int32 elem = 2;
+}
+
+message Response {
+    int32 size = 1;
+    repeated int32 elem = 2;
+}

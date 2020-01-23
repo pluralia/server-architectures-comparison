@@ -1,0 +1,4 @@
+rootProject.name = 'task'
+include 'Common'
+include 'Client'
+include 'Server'
