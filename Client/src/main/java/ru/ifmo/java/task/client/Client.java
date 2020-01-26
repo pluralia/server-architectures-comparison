@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,12 +24,12 @@ public class Client {
     }
 
     public void run() throws IOException {
-        socket = new Socket(Constants.HOST, port);
+        socket = new Socket(Constants.LOCALHOST, port);
         input = socket.getInputStream();
         output = socket.getOutputStream();
 
         try {
-            sendRequest(Arrays.asList(4, 3, 4, 6, 7, 8, 3));
+            sendRequest(Arrays.asList(4, 3, 4, 6, 7, 8));
             sendRequest(Arrays.asList(3, 6, 8, 9, 8, 6, 0));
             receiveResponse();
             receiveResponse();
@@ -43,7 +44,11 @@ public class Client {
                 .addAllElem(arr)
                 .build();
 
-//        output.write(request.getSize());
+
+        int packageSize = request.getSerializedSize();
+        assert packageSize > 0 && packageSize < Integer.MAX_VALUE;
+        output.write(ByteBuffer.allocate(4).putInt(packageSize).array());
+
         request.writeDelimitedTo(output);
         output.flush();
     }
