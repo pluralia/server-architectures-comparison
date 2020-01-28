@@ -19,11 +19,11 @@ public class Client {
     private InputStream input;
     private OutputStream output;
 
-    public Client(int port) {
+    public Client(int port, int X) {
         this.port = port;
     }
 
-    public void run() throws IOException {
+    public void run(int n, int m, int d) throws IOException {
         socket = new Socket(Constants.LOCALHOST, port);
         input = socket.getInputStream();
         output = socket.getOutputStream();
