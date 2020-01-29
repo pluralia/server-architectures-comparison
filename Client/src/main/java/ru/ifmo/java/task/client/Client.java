@@ -45,7 +45,6 @@ public class Client {
 
             sendRequest(Arrays.asList(3, 9, 8, 6, 0));
             receiveResponse();
-            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {

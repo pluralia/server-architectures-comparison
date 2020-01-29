@@ -45,11 +45,11 @@ public class Server {
             SocketChannel socketChannel = serverSocketChannel.accept();
             socketChannel.configureBlocking(false);
 
-            PackageHandler packageHandler = new PackageHandler(pool, socketChannel, outputSelector, outputLock);
+            ServerWorker serverWorker = new ServerWorker(pool, socketChannel, outputSelector, outputLock);
 
             inputLock.lock();
             inputSelector.wakeup();
-            socketChannel.register(inputSelector, SelectionKey.OP_READ, packageHandler);
+            socketChannel.register(inputSelector, SelectionKey.OP_READ, serverWorker);
             inputLock.unlock();
         }
 
@@ -74,10 +74,10 @@ public class Server {
                         SelectionKey selectionKey = keyIterator.next();
 
                         if (selectionKey.isReadable()) {
-                            PackageHandler packageHandler = (PackageHandler) selectionKey.attachment();
+                            ServerWorker serverWorker = (ServerWorker) selectionKey.attachment();
 
-                            assert packageHandler != null;
-                            packageHandler.readAndHandle();
+                            assert serverWorker != null;
+                            serverWorker.readAndHandle();
                         }
 
                         keyIterator.remove();
@@ -102,10 +102,10 @@ public class Server {
                         SelectionKey selectionKey = keyIterator.next();
 
                         if (selectionKey.isWritable()) {
-                            PackageHandler packageHandler = (PackageHandler) selectionKey.attachment();
+                            ServerWorker serverWorker = (ServerWorker) selectionKey.attachment();
 
-                            assert packageHandler != null;
-                            packageHandler.writeRes();
+                            assert serverWorker != null;
+                            serverWorker.writeRes();
                         }
 
                         keyIterator.remove();

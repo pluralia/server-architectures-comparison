@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,7 +38,14 @@ public class ServerWorker {
         return new Thread(() -> {
             try {
                 while (!Thread.interrupted()) {
-                    Request request = Request.parseDelimitedFrom(input);
+                    byte[] sizeB = new byte[Constants.INT_SIZE];
+                    input.read(sizeB);
+                    ByteBuffer wrapped = ByteBuffer.wrap(sizeB); // big-endian by default
+                    int size = wrapped.getInt();
+
+                    byte[] protoBuf = new byte[size];
+                    input.read(protoBuf);
+                    Request request = Request.parseFrom(protoBuf);
                     if (request != null) {
                         pool.submit(initTask(request));
                     }
@@ -68,7 +76,9 @@ public class ServerWorker {
     private Runnable initOutputExecutor(Response response) {
         return () -> {
             try {
-                response.writeDelimitedTo(output);
+                int packageSize = response.getSerializedSize();
+                output.write(ByteBuffer.allocate(Constants.INT_SIZE).putInt(packageSize).array());
+                response.writeTo(output);
             } catch(IOException e) {
                 e.printStackTrace();
             }

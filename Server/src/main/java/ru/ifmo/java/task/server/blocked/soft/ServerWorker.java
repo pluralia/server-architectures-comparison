@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 public class ServerWorker implements Runnable {
     private final Socket socket;
@@ -23,8 +24,17 @@ public class ServerWorker implements Runnable {
     public void run() {
         try {
             while (true) {
-                Request request = Request.parseDelimitedFrom(input);
-                processRequest(request);
+                byte[] sizeB = new byte[Constants.INT_SIZE];
+                input.read(sizeB);
+                ByteBuffer wrapped = ByteBuffer.wrap(sizeB); // big-endian by default
+                int size = wrapped.getInt();
+
+                byte[] protoBuf = new byte[size];
+                input.read(protoBuf);
+                Request request = Request.parseFrom(protoBuf);
+                if (request != null) {
+                    processRequest(request);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -38,10 +48,13 @@ public class ServerWorker implements Runnable {
     }
 
     private void processRequest(Request request) throws IOException {
-        Response.newBuilder()
+        Response response = Response.newBuilder()
                 .setSize(request.getSize())
                 .addAllElem(Constants.SORT.apply(request.getElemList()))
-                .build()
-                .writeDelimitedTo(output);
+                .build();
+
+        int packageSize = response.getSerializedSize();
+        output.write(ByteBuffer.allocate(Constants.INT_SIZE).putInt(packageSize).array());
+        response.writeTo(output);
     }
 }

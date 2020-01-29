@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.locks.Lock;
 
-public class PackageHandler {
+public class ServerWorker {
     private final ExecutorService pool;
     private final SocketChannel socketChannel;
 
@@ -28,7 +28,7 @@ public class PackageHandler {
     private ByteBuffer body;
     private ConcurrentLinkedQueue<ByteBuffer> resultQueue = new ConcurrentLinkedQueue<>();
 
-    public PackageHandler(ExecutorService pool, SocketChannel socketChannel, Selector outputSelector, Lock writerLock) {
+    public ServerWorker(ExecutorService pool, SocketChannel socketChannel, Selector outputSelector, Lock writerLock) {
         this.pool = pool;
         this.socketChannel = socketChannel;
 
