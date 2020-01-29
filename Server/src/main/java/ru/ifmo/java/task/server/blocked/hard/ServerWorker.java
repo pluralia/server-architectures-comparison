@@ -39,12 +39,18 @@ public class ServerWorker {
             try {
                 while (!Thread.interrupted()) {
                     byte[] sizeB = new byte[Constants.INT_SIZE];
-                    input.read(sizeB);
-                    ByteBuffer wrapped = ByteBuffer.wrap(sizeB); // big-endian by default
-                    int size = wrapped.getInt();
+                    int numOfBytes = input.read(sizeB);
+                    assert numOfBytes <= Constants.INT_SIZE;
+                    while (numOfBytes != Constants.INT_SIZE) {
+                        numOfBytes += input.read(sizeB, numOfBytes, Constants.INT_SIZE - numOfBytes);
+                    }
+                    int size = ByteBuffer.wrap(sizeB).getInt();
 
                     byte[] protoBuf = new byte[size];
-                    input.read(protoBuf);
+                    numOfBytes = input.read(protoBuf);
+                    while (numOfBytes != size) {
+                        numOfBytes += input.read(protoBuf, numOfBytes, size - numOfBytes);
+                    }
                     Request request = Request.parseFrom(protoBuf);
                     if (request != null) {
                         pool.submit(initTask(request));

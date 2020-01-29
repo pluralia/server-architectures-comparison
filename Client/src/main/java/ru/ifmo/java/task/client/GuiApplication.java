@@ -1,10 +1,9 @@
 package ru.ifmo.java.task.client;
 
 import ru.ifmo.java.task.Constants;
+import ru.ifmo.java.task.server.ServerManager;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -13,73 +12,66 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 class GuiApplication {
-    private final Client client;
-
     private final ExecutorService uiThreadPool;
+    private final ExecutorService workerThreadPool;
+    private ServerManager serverManager;
 
     private boolean notReady = true;
-
-    private final String BLOCKED_SOFT = "Blocked: one-client-one-thread";
-    private final String BLOCKED_HARD = "Blocked: thread pool";
-    private final String UNBLOCKED = "Unblocked";
 
     private final String ELEMS_NUMBER = "N - Number of sorted elements";
     private final String CLIENTS_NUMBER = "M - Number of worked clients";
     private final String DURATION = "D - Lag from server response to new request";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         new GuiApplication().run();
     }
 
-    private GuiApplication() {
-//        int port = getPortByArchitecture();
-//
-//        int X = chooseMetricValue(
-//                "Please, enter a number of requires",
-//                10,
-//                "Error number of requests");
-//
-//        List<List<Integer>> metricsValues = getMetricsValues();
-//        int testNum = metricsValues.get(0).size();
+    private GuiApplication() throws IOException {
+        String architectureType = getArchitectureType();
 
-        int port = Constants.UNBLOCKED_PORT;
-        int X = 1;
-        int testNum = 1;
+        int X = chooseMetricValue(
+                "Please, enter a number of requires",
+                10,
+                "Error number of requests");
 
-        client = new Client(port, X);
+        List<List<Integer>> metricsValues = getMetricsValues();
+        int testNum = metricsValues.get(0).size();
 
-        for (int i = 0; i < testNum; i++) {
-//            int N = metricsValues.get(0).get(i);
-//            int M = metricsValues.get(1).get(i);
-//            int D = metricsValues.get(2).get(i);
-            int N = 1;
-            int M = 1;
-            int D = 1;
+//        int port = Constants.UNBLOCKED_PORT;
+//        int X = 1;
+//        int testNum = 1;
 
-            System.out.println(N + " " + M + " " + D);
+        uiThreadPool = Executors.newFixedThreadPool(2);
+        workerThreadPool = Executors.newFixedThreadPool(2);
+
+        serverManager = new ServerManager();
+        workerThreadPool.submit(() -> {
             try {
-                client.run(N, M, D);
+                serverManager.run(architectureType);
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Error on the client");
-                System.exit(0);
+                e.printStackTrace();
             }
-        }
+        });
+        workerThreadPool.submit(() -> {
+            for (int i = 0; i < testNum; i++) {
+                int N = metricsValues.get(0).get(i);
+                int M = metricsValues.get(1).get(i);
+                int D = metricsValues.get(2).get(i);
 
-        uiThreadPool = Executors.newSingleThreadExecutor();
+                //            int N = 1;
+                //            int M = 1;
+                //            int D = 1;
+
+                System.out.println(N + " " + M + " " + D);
+                new ClientManager(Constants.ARCH_TYPE_TO_PORT.get(architectureType), X, N, M, D).run();
+            }
+        });
+        workerThreadPool.shutdown();
     }
 
-    private int getPortByArchitecture() {
-        Map<String, Integer> architectureInfoToPort = new HashMap<String, Integer>() {
-            {
-                put(BLOCKED_SOFT, Constants.BLOCKED_SOFT_PORT);
-                put(BLOCKED_HARD, Constants.BLOCKED_HARD_PORT);
-                put(UNBLOCKED, Constants.UNBLOCKED_PORT);
-            }
-        };
-
-        Object[] architectures = new Object[] { BLOCKED_SOFT, BLOCKED_HARD, UNBLOCKED };
+    private String getArchitectureType() {
+        Object[] architectures = new Object[]
+                { Constants.BLOCKED_SOFT, Constants.BLOCKED_HARD, Constants.UNBLOCKED };
         String architectureString = (String)JOptionPane.showInputDialog(
                 null,
                 "Please, choose a testing server architecture",
@@ -93,7 +85,7 @@ class GuiApplication {
             System.exit(0);
         }
 
-        return architectureInfoToPort.get(architectureString);
+        return architectureString;
     }
 
     private List<List<Integer>> getMetricsValues() {
@@ -193,6 +185,12 @@ class GuiApplication {
             @Override
             public void windowClosing(WindowEvent x) {
                 uiThreadPool.shutdownNow();
+                workerThreadPool.shutdownNow();
+                try {
+                    serverManager.stop();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

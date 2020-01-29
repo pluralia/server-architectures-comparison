@@ -1,6 +1,7 @@
 package ru.ifmo.java.task.server.unblocked;
 
 import ru.ifmo.java.task.Constants;
+import ru.ifmo.java.task.server.Server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -14,20 +15,23 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Server {
+public class UnblockedServer extends Server {
     private Selector inputSelector;
     private Selector outputSelector;
 
-    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.NTHREADS);
+    private ExecutorService pool;
+    private ServerSocketChannel serverSocketChannel;
 
     private final Lock inputLock = new ReentrantLock();
     private final Lock outputLock = new ReentrantLock();
 
     public static void main(String[] args) throws IOException {
-        new Server().run();
+        new UnblockedServer().run();
     }
 
     public void run() throws IOException {
+        pool = Executors.newFixedThreadPool(Constants.NTHREADS);
+
         inputSelector = Selector.open();
         Thread inputSelectorThread = initInputSelectorThread();
         inputSelectorThread.setDaemon(true);
@@ -38,7 +42,7 @@ public class Server {
         outputSelectorThread.setDaemon(true);
         outputSelectorThread.start();
 
-        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+        serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.bind(new InetSocketAddress(Constants.LOCALHOST, Constants.UNBLOCKED_PORT));
 
         while (true) {
@@ -52,12 +56,13 @@ public class Server {
             socketChannel.register(inputSelector, SelectionKey.OP_READ, serverWorker);
             inputLock.unlock();
         }
+    }
 
-        // the unreachable state in case of using a while-true cycle
-//        inputSelector.close();
-//        outputSelector.close();
-//        serverSocketChannel.close();
-//        pool.shutdown();
+    public void stop() throws IOException {
+        inputSelector.close();
+        outputSelector.close();
+        serverSocketChannel.close();
+        pool.shutdown();
     }
 
     private Thread initInputSelectorThread() {

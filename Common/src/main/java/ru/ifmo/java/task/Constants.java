@@ -1,9 +1,23 @@
 package ru.ifmo.java.task;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class Constants {
+    public static final String BLOCKED_SOFT = "Blocked: one-client-one-thread";
+    public static final String BLOCKED_HARD = "Blocked: thread pool";
+    public static final String UNBLOCKED = "Unblocked";
+
+    public static final Map<String, Integer> ARCH_TYPE_TO_PORT = new HashMap<String, Integer>() {
+        {
+            put(BLOCKED_SOFT, BLOCKED_SOFT_PORT);
+            put(BLOCKED_HARD, BLOCKED_HARD_PORT);
+            put(UNBLOCKED, UNBLOCKED_PORT);
+        }
+    };
+
     public static final int INT_SIZE = 4;
 
     public static final String LOCALHOST = "localhost";
@@ -14,9 +28,11 @@ public class Constants {
     public static final int NTHREADS = 4;
 
     public static final int UNBLOCKED_PORT = 1236;
-    public static final int BUFFER_SIZE = 40;
 
     public static final Function<List<Integer>, List<Integer>> SORT = Sort::bubbleSort;
+
+    public static final int MIN = -1000;
+    public static final int MAX = 1000;
 
     private Constants() {}
 }
