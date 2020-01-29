@@ -43,6 +43,7 @@ public class ServerWorker implements Runnable {
                 byte[] protoBuf = Lib.receive(input);
                 Request request = Request.parseFrom(protoBuf);
                 assert request != null;
+                
                 processRequest(request);
             }
         } catch (IOException e) {

@@ -43,13 +43,13 @@ public class ServerWorker {
 
         this.pool = pool;
 
-        inputThread = initInputThread();
+        inputThread = new Thread(initInputThread());
         inputThread.setDaemon(true);
         inputThread.start();
     }
 
-    private Thread initInputThread() {
-        return new Thread(() -> {
+    private Runnable initInputThread() {
+        return () -> {
             try {
                 while (!Thread.interrupted()) {
                     startClientOnServer = System.currentTimeMillis();
@@ -57,6 +57,7 @@ public class ServerWorker {
                     byte[] protoBuf = Lib.receive(input);
                     Request request = Request.parseFrom(protoBuf);
                     assert request != null;
+
                     pool.submit(initTask(request));
                 }
             } catch (IOException e) {
@@ -69,7 +70,7 @@ public class ServerWorker {
                     e.printStackTrace();
                 }
             }
-        });
+        };
     }
 
     private Runnable initTask(Request request) {
@@ -83,6 +84,7 @@ public class ServerWorker {
                     .setSize(request.getSize())
                     .addAllElem(sortedList)
                     .build();
+
             outputExecutor.submit(initOutputExecutor(response));
         };
     }

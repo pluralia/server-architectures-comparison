@@ -2,7 +2,7 @@ package ru.ifmo.java.task.server.unblocked;
 
 import ru.ifmo.java.task.Constants;
 import ru.ifmo.java.task.server.ServerStat;
-import ru.ifmo.java.task.server.Server;
+import ru.ifmo.java.task.server.AbstractServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class UnblockedServer extends Server {
+public class UnblockedServer extends AbstractServer {
     private Selector inputSelector;
     private Selector outputSelector;
 
@@ -30,16 +30,17 @@ public class UnblockedServer extends Server {
         super(serverStat);
     }
 
+    @Override
     public void run() throws IOException {
         pool = Executors.newFixedThreadPool(Constants.NTHREADS);
 
         inputSelector = Selector.open();
-        Thread inputSelectorThread = initInputSelectorThread();
+        Thread inputSelectorThread = new Thread(initInputSelectorThread());
         inputSelectorThread.setDaemon(true);
         inputSelectorThread.start();
 
         outputSelector = Selector.open();
-        Thread outputSelectorThread = initOutputSelectorThread();
+        Thread outputSelectorThread = new Thread(initOutputSelectorThread());
         outputSelectorThread.setDaemon(true);
         outputSelectorThread.start();
 
@@ -59,6 +60,7 @@ public class UnblockedServer extends Server {
         }
     }
 
+    @Override
     public void stop() throws IOException {
         inputSelector.close();
         outputSelector.close();
@@ -66,16 +68,16 @@ public class UnblockedServer extends Server {
         pool.shutdown();
     }
 
-    private Thread initInputSelectorThread() {
-        return new Thread(() -> {
+    private Runnable initInputSelectorThread() {
+        return () -> {
             try {
                 while (!Thread.interrupted()) {
                     inputLock.lock();
                     inputLock.unlock();
 
                     inputSelector.select();
-
                     Iterator<SelectionKey> keyIterator = inputSelector.selectedKeys().iterator();
+
                     while (keyIterator.hasNext()) {
                         SelectionKey selectionKey = keyIterator.next();
 
@@ -92,11 +94,11 @@ public class UnblockedServer extends Server {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
+        };
     }
 
-    private Thread initOutputSelectorThread() {
-        return new Thread(() -> {
+    private Runnable initOutputSelectorThread() {
+        return () -> {
             try {
                 while (!Thread.interrupted()) {
                     outputLock.lock();
@@ -104,6 +106,7 @@ public class UnblockedServer extends Server {
 
                     outputSelector.select();
                     Iterator<SelectionKey> keyIterator = outputSelector.selectedKeys().iterator();
+
                     while (keyIterator.hasNext()) {
                         SelectionKey selectionKey = keyIterator.next();
 
@@ -121,6 +124,6 @@ public class UnblockedServer extends Server {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
+        };
     }
 }

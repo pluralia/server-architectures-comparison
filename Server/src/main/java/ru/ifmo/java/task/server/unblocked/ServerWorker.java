@@ -27,6 +27,7 @@ public class ServerWorker {
     private int size;
     private boolean isSizeReading = true;
     private int numOfBytes = 0;
+
     private boolean isFirst = true;
 
     private ByteBuffer head = ByteBuffer.allocate(Constants.INT_SIZE);
@@ -40,7 +41,8 @@ public class ServerWorker {
     private long startClientOnServer = 0;
     private long finishClientOnServer = 0;
 
-    public ServerWorker(ServerStat serverStat, ExecutorService pool, SocketChannel socketChannel, Selector outputSelector, Lock writerLock) {
+    public ServerWorker(ServerStat serverStat, ExecutorService pool,
+                        SocketChannel socketChannel, Selector outputSelector, Lock writerLock) {
         this.serverStat = serverStat;
 
         this.pool = pool;

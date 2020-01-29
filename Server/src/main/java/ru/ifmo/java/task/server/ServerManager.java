@@ -8,7 +8,7 @@ import ru.ifmo.java.task.server.unblocked.UnblockedServer;
 import java.io.IOException;
 
 public class ServerManager {
-    private Server server;
+    private AbstractServer server;
     private ServerStat serverStat;
 
     public ServerManager(ServerStat serverStat) {
