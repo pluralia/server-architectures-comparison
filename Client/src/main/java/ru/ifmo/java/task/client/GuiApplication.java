@@ -130,7 +130,7 @@ class GuiApplication {
                         "Please, enter a number of " + metricsInfo[i],
                         1,
                         "Error number of " + metricsInfo[i]);
-                for (int j = 0; j < metricsValues.get(0).size(); j++) {
+                for (int j = 0; j < metricsValues.get(rangedMetricID).size(); j++) {
                     metricsValues.get(i).add(value);
                 }
             }
