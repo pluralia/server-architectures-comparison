@@ -11,12 +11,17 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Server {
     private Selector inputSelector;
     private Selector outputSelector;
 
     private final ExecutorService pool = Executors.newFixedThreadPool(Constants.NTHREADS);
+
+    private final Lock inputLock = new ReentrantLock();
+    private final Lock outputLock = new ReentrantLock();
 
     public static void main(String[] args) throws IOException {
         new Server().run();
@@ -40,8 +45,12 @@ public class Server {
             SocketChannel socketChannel = serverSocketChannel.accept();
             socketChannel.configureBlocking(false);
 
-            PackageHandler packageHandler = new PackageHandler(pool, socketChannel, outputSelector);
+            PackageHandler packageHandler = new PackageHandler(pool, socketChannel, outputSelector, outputLock);
+
+            inputLock.lock();
+            inputSelector.wakeup();
             socketChannel.register(inputSelector, SelectionKey.OP_READ, packageHandler);
+            inputLock.unlock();
         }
 
         // the unreachable state in case of using a while-true cycle
@@ -55,7 +64,11 @@ public class Server {
         return new Thread(() -> {
             try {
                 while (!Thread.interrupted()) {
-                    inputSelector.selectNow();
+                    inputLock.lock();
+                    inputLock.unlock();
+
+                    inputSelector.select();
+
                     Iterator<SelectionKey> keyIterator = inputSelector.selectedKeys().iterator();
                     while (keyIterator.hasNext()) {
                         SelectionKey selectionKey = keyIterator.next();
@@ -63,16 +76,14 @@ public class Server {
                         if (selectionKey.isReadable()) {
                             PackageHandler packageHandler = (PackageHandler) selectionKey.attachment();
 
-                            if (packageHandler != null) {
-                                packageHandler.readAndHandle();
-                            }
+                            assert packageHandler != null;
+                            packageHandler.readAndHandle();
                         }
 
                         keyIterator.remove();
                     }
-                    Thread.sleep(1000);
                 }
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         });
@@ -82,7 +93,10 @@ public class Server {
         return new Thread(() -> {
             try {
                 while (!Thread.interrupted()) {
-                    outputSelector.selectNow();
+                    outputLock.lock();
+                    outputLock.unlock();
+
+                    outputSelector.select();
                     Iterator<SelectionKey> keyIterator = outputSelector.selectedKeys().iterator();
                     while (keyIterator.hasNext()) {
                         SelectionKey selectionKey = keyIterator.next();
@@ -90,9 +104,8 @@ public class Server {
                         if (selectionKey.isWritable()) {
                             PackageHandler packageHandler = (PackageHandler) selectionKey.attachment();
 
-                            if (packageHandler != null) {
-                                packageHandler.writeRes();
-                            }
+                            assert packageHandler != null;
+                            packageHandler.writeRes();
                         }
 
                         keyIterator.remove();

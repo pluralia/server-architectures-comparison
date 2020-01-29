@@ -1,7 +1,6 @@
 package ru.ifmo.java.task.server.unblocked;
 
 
-import org.jetbrains.annotations.NotNull;
 import ru.ifmo.java.task.Constants;
 import ru.ifmo.java.task.protocol.Protocol.*;
 
@@ -10,61 +9,72 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.locks.Lock;
 
 public class PackageHandler {
     private final ExecutorService pool;
     private final SocketChannel socketChannel;
+
     private final Selector outputSelector;
+    private final Lock writerLock;
 
-    private final ByteBuffer inputByteBuffer = ByteBuffer.allocate(Constants.BUFFER_SIZE);
-    private final ByteBuffer outputByteBuffer = ByteBuffer.allocate(Constants.BUFFER_SIZE);
-
-    private boolean isSizeReading = true;
     private int size;
+    boolean isSizeReading = true;
+    int numOfBytes = 0;
 
-    public PackageHandler(ExecutorService pool, SocketChannel socketChannel, Selector outputSelector) {
+    private ByteBuffer head = ByteBuffer.allocate(Constants.INT_SIZE);
+    private ByteBuffer body;
+    private ConcurrentLinkedQueue<ByteBuffer> resultQueue = new ConcurrentLinkedQueue<>();
+
+    public PackageHandler(ExecutorService pool, SocketChannel socketChannel, Selector outputSelector, Lock writerLock) {
         this.pool = pool;
         this.socketChannel = socketChannel;
+
         this.outputSelector = outputSelector;
+        this.writerLock = writerLock;
     }
 
     public void readAndHandle() throws IOException {
-        socketChannel.read(inputByteBuffer);
-        inputByteBuffer.flip();
-        handlingRead();
-    }
-
-    public synchronized void writeRes() throws IOException {
-        outputByteBuffer.flip();
-        socketChannel.write(outputByteBuffer);
-        outputByteBuffer.compact();
-    }
-
-    // if this is the first reading of a new package
-    // try to read only a size of the protobuf part;
-    // else read protobuf part
-    private void handlingRead() throws IOException {
         if (isSizeReading) {
-            if (inputByteBuffer.limit() - inputByteBuffer.position() >= Constants.INT_SIZE) {
+            numOfBytes += socketChannel.read(head);
+            if (numOfBytes == Constants.INT_SIZE) {
+                head.flip();
+                size = head.getInt();
+
+                numOfBytes = 0;
                 isSizeReading = false;
-                size = inputByteBuffer.getInt();
-                handlingRead();
+                body = ByteBuffer.allocate(size);
+                readAndHandle();
             }
-        } else if (inputByteBuffer.limit() - inputByteBuffer.position() >= size) {
-            isSizeReading = true;
+        } else {
+            numOfBytes += socketChannel.read(body);
+            if (numOfBytes == size) {
+                body.flip();
+                assert body.remaining() == size;
+                byte[] protoBuf = new byte[size];
+                body.get(protoBuf);
 
-            Request request = Request.parseDelimitedFrom(new ByteBufferInputStream(inputByteBuffer));
-            if (request != null) {
-                pool.submit(initTask(request));
+                Request request = Request.parseFrom(protoBuf);
+                if (request != null) {
+                    System.out.println(request.getSize());
+                    for (int i : request.getElemList()) {
+                        System.out.print(i + " ");
+                    }
+                    System.out.println();
+
+                    pool.submit(initTask(request));
+                } else {
+                    throw new IOException("null request");
+                }
+
+                numOfBytes = 0;
+                isSizeReading = true;
+                head.clear();
+                body.clear();
+                readAndHandle();
             }
-
-            if (inputByteBuffer.limit() == inputByteBuffer.position()) {
-                inputByteBuffer.compact();
-                return;
-            }
-
-            handlingRead();
         }
     }
 
@@ -79,57 +89,45 @@ public class PackageHandler {
         };
     }
 
-    private synchronized void writeToOutputBuffer(Response response) {
+    private void writeToOutputBuffer(Response response) {
         try {
             System.out.println("RESPONSE " + response.getSize());
 
-            response.writeDelimitedTo(new ByteBufferOutputStream(outputByteBuffer));
+            ByteArrayOutputStream protoBufOS = new ByteArrayOutputStream(response.getSerializedSize());
+            response.writeTo(protoBufOS);
+
+            ByteBuffer result = ByteBuffer.allocate(response.getSerializedSize());
+            result.put(protoBufOS.toByteArray());
+            result.flip();
+            resultQueue.add(result);
 
             if (socketChannel.keyFor(outputSelector) == null) {
+                writerLock.lock();
                 outputSelector.wakeup();
                 socketChannel.register(outputSelector, SelectionKey.OP_WRITE, this);
+                writerLock.unlock();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // ByteBufferInputStream and ByteBufferOutputStream from
-    // http://www.java2s.com/Code/Java/File-Input-Output/CreatinganinputoroutputstreamonaByteBuffer.htm
+    public synchronized void writeRes() throws IOException {
+        if (!resultQueue.isEmpty()) {
+            ByteBuffer result = resultQueue.poll();
 
-    private class ByteBufferInputStream extends InputStream {
-        private ByteBuffer buf;
+            ByteBuffer sizeBB = ByteBuffer.allocate(Constants.INT_SIZE).putInt(result.remaining());
+            sizeBB.flip();
 
-        ByteBufferInputStream(ByteBuffer buf) {
-            this.buf = buf;
-        }
-
-        public synchronized int read() {
-            if (!buf.hasRemaining()) {
-                return -1;
+            while (sizeBB.hasRemaining()) {
+                socketChannel.write(sizeBB);
             }
-            return buf.get();
-        }
 
-        public synchronized int read(@NotNull byte[] bytes, int off, int len) {
-            len = Math.min(len, buf.remaining());
-            buf.get(bytes, off, len);
-            return len;
-        }
-    }
-
-    private class ByteBufferOutputStream extends OutputStream {
-        private ByteBuffer buf;
-
-        ByteBufferOutputStream(ByteBuffer buf) {
-            this.buf = buf;
-        }
-        public synchronized void write(int b) {
-            buf.put((byte) b);
-        }
-
-        public synchronized void write(@NotNull byte[] bytes, int off, int len) {
-            buf.put(bytes, off, len);
+            while (result.hasRemaining()) {
+                socketChannel.write(result);
+            }
+        } else {
+            throw new IOException("Empty result queue");
         }
     }
 }
