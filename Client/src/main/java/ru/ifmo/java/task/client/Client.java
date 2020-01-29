@@ -26,18 +26,23 @@ public class Client {
         output = socket.getOutputStream();
     }
 
-    public void run(int x, int n, int d) throws IOException {
+    public long run(int x, int n, int d) throws IOException {
+        long time = 0;
         try {
+            long start = System.currentTimeMillis();
             for (int i = 0; i < x; i++) {
                 sendRequest(generateArray(n));
                 receiveResponse();
                 Thread.sleep(d);
             }
+            long finish = System.currentTimeMillis();
+            time = (finish - start) % 1000;
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             socket.close();
         }
+        return time / x - d;
     }
 
     private List<Integer> generateArray(int n) {

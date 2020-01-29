@@ -14,7 +14,9 @@ import java.util.concurrent.Executors;
 class GuiApplication {
     private final ExecutorService uiThreadPool;
     private final ExecutorService workerThreadPool;
+
     private ServerManager serverManager;
+    private ClientManager clientManager;
 
     private boolean notReady = true;
 
@@ -22,24 +24,22 @@ class GuiApplication {
     private final String CLIENTS_NUMBER = "M - Number of worked clients";
     private final String DURATION = "D - Lag from server response to new request";
 
-    public static void main(String[] args) throws IOException {
+    private String architectureString;
+    private final String timeToResponseFile = "timeToResponseFile.txt";
+    private final String taskOnServerFile = "taskOnServerFile.txt";
+    private final String clientOnServerFile = "clientOnServerFile.txt";
+
+    public static void main(String[] args) {
         new GuiApplication().run();
     }
 
-    private GuiApplication() throws IOException {
+    private GuiApplication() {
         String architectureType = getArchitectureType();
 
         int X = chooseMetricValue(
                 "Please, enter a number of requires",
                 10,
                 "Error number of requests");
-
-        List<List<Integer>> metricsValues = getMetricsValues();
-        int testNum = metricsValues.get(0).size();
-
-//        int port = Constants.UNBLOCKED_PORT;
-//        int X = 1;
-//        int testNum = 1;
 
         uiThreadPool = Executors.newFixedThreadPool(2);
         workerThreadPool = Executors.newFixedThreadPool(2);
@@ -52,27 +52,18 @@ class GuiApplication {
                 e.printStackTrace();
             }
         });
-        workerThreadPool.submit(() -> {
-            for (int i = 0; i < testNum; i++) {
-                int N = metricsValues.get(0).get(i);
-                int M = metricsValues.get(1).get(i);
-                int D = metricsValues.get(2).get(i);
 
-                //            int N = 1;
-                //            int M = 1;
-                //            int D = 1;
+        int port = Constants.ARCH_TYPE_TO_PORT.get(architectureType);
+        clientManager = new ClientManager(port, X, getMetricsValues());
+        workerThreadPool.submit(clientManager::run);
 
-                System.out.println(N + " " + M + " " + D);
-                new ClientManager(Constants.ARCH_TYPE_TO_PORT.get(architectureType), X, N, M, D).run();
-            }
-        });
         workerThreadPool.shutdown();
     }
 
     private String getArchitectureType() {
         Object[] architectures = new Object[]
                 { Constants.BLOCKED_SOFT, Constants.BLOCKED_HARD, Constants.UNBLOCKED };
-        String architectureString = (String)JOptionPane.showInputDialog(
+        architectureString = (String)JOptionPane.showInputDialog(
                 null,
                 "Please, choose a testing server architecture",
                 "Server architecture",
@@ -184,9 +175,11 @@ class GuiApplication {
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent x) {
-                uiThreadPool.shutdownNow();
-                workerThreadPool.shutdownNow();
+                uiThreadPool.shutdown();
+                workerThreadPool.shutdown();
+
                 try {
+                    clientManager.writeToFileTimeToResponseStat(architectureString, timeToResponseFile);
                     serverManager.stop();
                 } catch (IOException e) {
                     e.printStackTrace();
