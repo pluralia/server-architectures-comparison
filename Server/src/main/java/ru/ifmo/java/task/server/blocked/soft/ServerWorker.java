@@ -1,6 +1,7 @@
 package ru.ifmo.java.task.server.blocked.soft;
 
 import ru.ifmo.java.task.Constants;
+import ru.ifmo.java.task.Lib;
 import ru.ifmo.java.task.protocol.Protocol.*;
 import ru.ifmo.java.task.server.ServerStat;
 
@@ -39,23 +40,10 @@ public class ServerWorker implements Runnable {
             while (true) {
                 startClientOnServer = System.currentTimeMillis();
 
-                byte[] sizeB = new byte[Constants.INT_SIZE];
-                int numOfBytes = input.read(sizeB);
-                assert numOfBytes <= Constants.INT_SIZE;
-                while (numOfBytes != Constants.INT_SIZE) {
-                    numOfBytes += input.read(sizeB, numOfBytes, Constants.INT_SIZE - numOfBytes);
-                }
-                int size = ByteBuffer.wrap(sizeB).getInt();
-
-                byte[] protoBuf = new byte[size];
-                numOfBytes = input.read(protoBuf);
-                while (numOfBytes != size) {
-                    numOfBytes += input.read(protoBuf, numOfBytes, size - numOfBytes);
-                }
+                byte[] protoBuf = Lib.receive(input);
                 Request request = Request.parseFrom(protoBuf);
-                if (request != null) {
-                    processRequest(request);
-                }
+                assert request != null;
+                processRequest(request);
             }
         } catch (IOException e) {
             e.printStackTrace();

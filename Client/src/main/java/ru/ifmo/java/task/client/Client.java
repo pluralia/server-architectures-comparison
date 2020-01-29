@@ -1,6 +1,7 @@
 package ru.ifmo.java.task.client;
 
 import ru.ifmo.java.task.Constants;
+import ru.ifmo.java.task.Lib;
 import ru.ifmo.java.task.protocol.Protocol.Request;
 import ru.ifmo.java.task.protocol.Protocol.Response;
 
@@ -65,23 +66,7 @@ public class Client {
     }
 
     private void receiveResponse() throws IOException {
-        byte[] sizeB = new byte[Constants.INT_SIZE];
-        int numOfBytes = input.read(sizeB);
-        assert numOfBytes <= Constants.INT_SIZE;
-        while (numOfBytes != Constants.INT_SIZE) {
-            numOfBytes += input.read(sizeB, numOfBytes, Constants.INT_SIZE - numOfBytes);
-        }
-
-        ByteBuffer wrapped = ByteBuffer.wrap(sizeB); // big-endian by default
-        int size = wrapped.getInt();
-
-        byte[] protoBuf = new byte[size];
-        numOfBytes = input.read(protoBuf);
-        assert numOfBytes <= size;
-        while (numOfBytes != size) {
-            numOfBytes += input.read(protoBuf, numOfBytes, size - numOfBytes);
-        }
-
+        byte[] protoBuf = Lib.receive(input);
         Response response = Response.parseFrom(protoBuf);
         response.getSize();
     }
