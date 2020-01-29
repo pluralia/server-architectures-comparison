@@ -1,6 +1,7 @@
 package ru.ifmo.java.task.server.unblocked;
 
 import ru.ifmo.java.task.Constants;
+import ru.ifmo.java.task.server.ServerStat;
 import ru.ifmo.java.task.server.Server;
 
 import java.io.IOException;
@@ -25,8 +26,8 @@ public class UnblockedServer extends Server {
     private final Lock inputLock = new ReentrantLock();
     private final Lock outputLock = new ReentrantLock();
 
-    public static void main(String[] args) throws IOException {
-        new UnblockedServer().run();
+    public UnblockedServer(ServerStat serverStat) {
+        super(serverStat);
     }
 
     public void run() throws IOException {
@@ -49,7 +50,7 @@ public class UnblockedServer extends Server {
             SocketChannel socketChannel = serverSocketChannel.accept();
             socketChannel.configureBlocking(false);
 
-            ServerWorker serverWorker = new ServerWorker(pool, socketChannel, outputSelector, outputLock);
+            ServerWorker serverWorker = new ServerWorker(serverStat, pool, socketChannel, outputSelector, outputLock);
 
             inputLock.lock();
             inputSelector.wakeup();

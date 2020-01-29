@@ -1,6 +1,7 @@
 package ru.ifmo.java.task.client;
 
 import ru.ifmo.java.task.Constants;
+import ru.ifmo.java.task.server.ServerStat;
 import ru.ifmo.java.task.server.ServerManager;
 
 import javax.swing.*;
@@ -18,16 +19,14 @@ class GuiApplication {
     private ServerManager serverManager;
     private ClientManager clientManager;
 
-    private boolean notReady = true;
-
     private final String ELEMS_NUMBER = "N - Number of sorted elements";
     private final String CLIENTS_NUMBER = "M - Number of worked clients";
     private final String DURATION = "D - Lag from server response to new request";
 
     private String architectureString;
-    private final String timeToResponseFile = "timeToResponseFile.txt";
-    private final String taskOnServerFile = "taskOnServerFile.txt";
-    private final String clientOnServerFile = "clientOnServerFile.txt";
+    private final String fileName = "output.txt";
+
+    private ServerStat serverStat = new ServerStat();
 
     public static void main(String[] args) {
         new GuiApplication().run();
@@ -44,7 +43,7 @@ class GuiApplication {
         uiThreadPool = Executors.newFixedThreadPool(2);
         workerThreadPool = Executors.newFixedThreadPool(2);
 
-        serverManager = new ServerManager();
+        serverManager = new ServerManager(serverStat);
         workerThreadPool.submit(() -> {
             try {
                 serverManager.run(architectureType);
@@ -54,7 +53,7 @@ class GuiApplication {
         });
 
         int port = Constants.ARCH_TYPE_TO_PORT.get(architectureType);
-        clientManager = new ClientManager(port, X, getMetricsValues());
+        clientManager = new ClientManager(this, serverStat, port, X, getMetricsValues());
         workerThreadPool.submit(clientManager::run);
 
         workerThreadPool.shutdown();
@@ -163,11 +162,23 @@ class GuiApplication {
         uiThreadPool.submit(() -> {
             JFrame mainFrame = createMainFrame();
 
-            JButton downloadButton = createDownloadButton();
+            JButton downloadButton = createStatusButton();
             mainFrame.add(downloadButton);
 
             mainFrame.setVisible(true);
         });
+    }
+
+    public void terminateAll() {
+        uiThreadPool.shutdown();
+        workerThreadPool.shutdown();
+
+        try {
+            clientManager.writeToFileTimeToResponseStat(architectureString, fileName);
+            serverManager.stop();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private JFrame createMainFrame() {
@@ -175,46 +186,27 @@ class GuiApplication {
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent x) {
-                uiThreadPool.shutdown();
-                workerThreadPool.shutdown();
-
-                try {
-                    clientManager.writeToFileTimeToResponseStat(architectureString, timeToResponseFile);
-                    serverManager.stop();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                terminateAll();
             }
         });
 
         mainFrame.setTitle("Test Server Architectures");
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        mainFrame.setBounds(100, 100, 1000, 600);
+        mainFrame.setBounds(100, 100, 500, 300);
 
         return mainFrame;
     }
 
-    public JButton createDownloadButton() {
-        final JButton downloadButton = new JButton();
-        downloadButton.addActionListener(arg -> {
-            if (notReady) {
-                JOptionPane.showMessageDialog(
+    public JButton createStatusButton() {
+        final JButton statusButton = new JButton();
+        statusButton.addActionListener(arg ->
+            JOptionPane.showMessageDialog(
                         null,
-                        "Data are not ready for the downloading");
-            } else {
-                download();
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Data were successfully downloaded");
-            }
-        });
+                        "Data are not ready for the downloading"));
 
-        downloadButton.setText("Download");
-        downloadButton.setSize(400,400);
-        downloadButton.setVisible(true);
-        return downloadButton;
-    }
-
-    private void download() {
+        statusButton.setText("Status");
+        statusButton.setSize(200,200);
+        statusButton.setVisible(true);
+        return statusButton;
     }
 }

@@ -36,7 +36,7 @@ public class Client {
                 Thread.sleep(d);
             }
             long finish = System.currentTimeMillis();
-            time = (finish - start) % 1000;
+            time = finish - start;
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -58,12 +58,6 @@ public class Client {
                 .setSize(arr.size())
                 .addAllElem(arr)
                 .build();
-
-        System.out.println(request.getSize());
-        for (int i : request.getElemList()) {
-            System.out.print(i + " ");
-        }
-        System.out.println();
 
         int packageSize = request.getSerializedSize();
         output.write(ByteBuffer.allocate(Constants.INT_SIZE).putInt(packageSize).array());
@@ -89,10 +83,6 @@ public class Client {
         }
 
         Response response = Response.parseFrom(protoBuf);
-        System.out.println(response.getSize());
-        for (int i : response.getElemList()) {
-            System.out.print(i + " ");
-        }
-        System.out.println();
+        response.getSize();
     }
 }

@@ -3,17 +3,21 @@ package ru.ifmo.java.task.server.unblocked;
 
 import ru.ifmo.java.task.Constants;
 import ru.ifmo.java.task.protocol.Protocol.*;
+import ru.ifmo.java.task.server.ServerStat;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.locks.Lock;
 
 public class ServerWorker {
+    private final ServerStat serverStat;
+
     private final ExecutorService pool;
     private final SocketChannel socketChannel;
 
@@ -21,14 +25,24 @@ public class ServerWorker {
     private final Lock writerLock;
 
     private int size;
-    boolean isSizeReading = true;
-    int numOfBytes = 0;
+    private boolean isSizeReading = true;
+    private int numOfBytes = 0;
+    private boolean isFirst = true;
 
     private ByteBuffer head = ByteBuffer.allocate(Constants.INT_SIZE);
     private ByteBuffer body;
     private ConcurrentLinkedQueue<ByteBuffer> resultQueue = new ConcurrentLinkedQueue<>();
 
-    public ServerWorker(ExecutorService pool, SocketChannel socketChannel, Selector outputSelector, Lock writerLock) {
+    // we work with time in different threads to get statistic;
+    // it's okay for our goals when we want to get general statistic
+    // so - we interested in the difference between moments of start and finish for all requires
+    // and the order of math operations for this goal doesn't matter
+    private long startClientOnServer = 0;
+    private long finishClientOnServer = 0;
+
+    public ServerWorker(ServerStat serverStat, ExecutorService pool, SocketChannel socketChannel, Selector outputSelector, Lock writerLock) {
+        this.serverStat = serverStat;
+
         this.pool = pool;
         this.socketChannel = socketChannel;
 
@@ -37,6 +51,11 @@ public class ServerWorker {
     }
 
     public void readAndHandle() throws IOException {
+        if (isFirst) {
+            startClientOnServer = System.currentTimeMillis();
+            isFirst = false;
+        }
+
         if (isSizeReading) {
             numOfBytes += socketChannel.read(head);
             if (numOfBytes == Constants.INT_SIZE) {
@@ -58,12 +77,6 @@ public class ServerWorker {
 
                 Request request = Request.parseFrom(protoBuf);
                 if (request != null) {
-                    System.out.println(request.getSize());
-                    for (int i : request.getElemList()) {
-                        System.out.print(i + " ");
-                    }
-                    System.out.println();
-
                     pool.submit(initTask(request));
                 } else {
                     throw new IOException("null request");
@@ -73,6 +86,9 @@ public class ServerWorker {
                 isSizeReading = true;
                 head.clear();
                 body.clear();
+
+                isFirst = true;
+
                 readAndHandle();
             }
         }
@@ -80,9 +96,14 @@ public class ServerWorker {
 
     private Runnable initTask(Request request) {
         return () -> {
+            long start = System.currentTimeMillis();
+            List<Integer> sortedList = Constants.SORT.apply(request.getElemList());
+            long finish = System.currentTimeMillis();
+            serverStat.taskOnServer.addAndGet(finish - start);
+
             Response response = Response.newBuilder()
                     .setSize(request.getSize())
-                    .addAllElem(Constants.SORT.apply(request.getElemList()))
+                    .addAllElem(sortedList)
                     .build();
 
             writeToOutputBuffer(response);
@@ -91,8 +112,6 @@ public class ServerWorker {
 
     private void writeToOutputBuffer(Response response) {
         try {
-            System.out.println("RESPONSE " + response.getSize());
-
             ByteArrayOutputStream protoBufOS = new ByteArrayOutputStream(response.getSerializedSize());
             response.writeTo(protoBufOS);
 
@@ -126,6 +145,9 @@ public class ServerWorker {
             while (result.hasRemaining()) {
                 socketChannel.write(result);
             }
+
+            finishClientOnServer = System.currentTimeMillis();
+            serverStat.clientOnServer.addAndGet(finishClientOnServer - startClientOnServer);
         } else {
             throw new IOException("Empty result queue");
         }

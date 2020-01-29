@@ -1,15 +1,15 @@
 package ru.ifmo.java.task.client;
 
+import ru.ifmo.java.task.server.ServerStat;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,7 +24,14 @@ public class ClientManager {
     private final AtomicLong timeToResponse = new AtomicLong(0);
     private final List<List<Long>> timeToResponseStat = new ArrayList<>();
 
-    public ClientManager(int port, int X, List<List<Integer>> metricsValues) {
+    private ServerStat serverStat;
+    private GuiApplication gui;
+
+    public ClientManager(GuiApplication gui, ServerStat serverStat,
+                         int port, int X,
+                         List<List<Integer>> metricsValues) {
+        this.gui = gui;
+        this.serverStat = serverStat;
         this.port = port;
         this.X = X;
         this.metricsValues = metricsValues;
@@ -47,9 +54,16 @@ public class ClientManager {
 
             List<Long> longStat = Stream.of(X, N, M, D).map(Long::valueOf).collect(Collectors.toList());
             longStat.add(timeToResponse.get() / M);
+            longStat.add(serverStat.taskOnServer.get() / X * M);
+            longStat.add(serverStat.clientOnServer.get() / X * M);
             timeToResponseStat.add(longStat);
+
             timeToResponse.set(0);
+            serverStat.taskOnServer.set(0);
+            serverStat.clientOnServer.set(0);
         }
+
+        gui.terminateAll();
     }
 
     private Runnable initTask(int N, int D) {
@@ -62,16 +76,7 @@ public class ClientManager {
         };
     }
 
-    public boolean writeToFileTimeToResponseStat(String archType, String fileName) throws IOException {
-        System.out.println("---------------------------------------------");
-
-        for (int i = 0; i < timeToResponseStat.size(); i++) {
-            for (int j = 0; j < timeToResponseStat.get(0).size(); j++) {
-                System.out.print(timeToResponseStat.get(i).get(j) + " ");
-            }
-            System.out.println();
-        }
-
+    public void writeToFileTimeToResponseStat(String archType, String fileName) throws IOException {
         File file = new File(fileName);
         if (!file.exists()) {
             file.createNewFile();
@@ -81,7 +86,7 @@ public class ClientManager {
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
         bufferedWriter.write(archType);
-        bufferedWriter.write("X N M D TIME\n");
+        bufferedWriter.write("\nX N M D RESPONSE_TIME TASK_ON_SERVER CLIENT_ON_SERVER\n");
 
         for (int i = 0; i < timeToResponseStat.size(); i++) {
             for (int j = 0; j < timeToResponseStat.get(0).size(); j++) {
@@ -91,8 +96,5 @@ public class ClientManager {
         }
         bufferedWriter.flush();
         bufferedWriter.close();
-
-        System.out.println("---------------------------------------------");
-        return true;
     }
 }

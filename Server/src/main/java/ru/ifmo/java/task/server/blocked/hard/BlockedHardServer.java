@@ -1,6 +1,7 @@
 package ru.ifmo.java.task.server.blocked.hard;
 
 import ru.ifmo.java.task.Constants;
+import ru.ifmo.java.task.server.ServerStat;
 import ru.ifmo.java.task.server.Server;
 
 import java.io.IOException;
@@ -13,8 +14,8 @@ public class BlockedHardServer extends Server {
     private ExecutorService pool;
     private ServerSocket serverSocket;
 
-    public static void main(String[] args) throws IOException {
-        new BlockedHardServer().run();
+    public BlockedHardServer(ServerStat serverStat) {
+        super(serverStat);
     }
 
     public void run() throws IOException {
@@ -22,7 +23,7 @@ public class BlockedHardServer extends Server {
         serverSocket = new ServerSocket(Constants.BLOCKED_HARD_PORT);
         while (true) {
             Socket socket = serverSocket.accept();
-            new ServerWorker(socket, pool);
+            new ServerWorker(serverStat, socket, pool);
         }
     }
 

@@ -9,17 +9,22 @@ import java.io.IOException;
 
 public class ServerManager {
     private Server server;
+    private ServerStat serverStat;
+
+    public ServerManager(ServerStat serverStat) {
+        this.serverStat = serverStat;
+    }
 
     public void run(String architectureType) throws IOException {
         switch (architectureType) {
             case Constants.BLOCKED_SOFT:
-                server = new BlockedSoftServer();
+                server = new BlockedSoftServer(serverStat);
                 break;
             case Constants.BLOCKED_HARD:
-                server = new BlockedHardServer();
+                server = new BlockedHardServer(serverStat);
                 break;
             case Constants.UNBLOCKED:
-                server = new UnblockedServer();
+                server = new UnblockedServer(serverStat);
                 break;
         }
         server.run();

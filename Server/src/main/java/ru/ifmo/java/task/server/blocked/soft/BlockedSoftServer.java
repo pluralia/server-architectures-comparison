@@ -1,6 +1,7 @@
 package ru.ifmo.java.task.server.blocked.soft;
 
 import ru.ifmo.java.task.Constants;
+import ru.ifmo.java.task.server.ServerStat;
 import ru.ifmo.java.task.server.Server;
 
 import java.io.IOException;
@@ -13,8 +14,8 @@ public class BlockedSoftServer extends Server {
     private ExecutorService pool;
     private ServerSocket serverSocket;
 
-    public static void main(String[] args) throws IOException {
-        new BlockedSoftServer().run();
+    public BlockedSoftServer(ServerStat serverStat) {
+        super(serverStat);
     }
 
     public void run() throws IOException {
@@ -23,7 +24,7 @@ public class BlockedSoftServer extends Server {
 
         while (true) {
             Socket socket = serverSocket.accept();
-            pool.submit(new ServerWorker(socket));
+            pool.submit(new ServerWorker(serverStat, socket));
         }
     }
 
