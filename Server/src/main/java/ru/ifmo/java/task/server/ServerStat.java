@@ -1,5 +1,6 @@
 package ru.ifmo.java.task.server;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -32,24 +33,26 @@ public class ServerStat {
     }
 
     public static class ClientStat {
-        private ConcurrentLinkedQueue<RequestStat> requestStatList = new ConcurrentLinkedQueue<>();
+        private ConcurrentLinkedQueue<RequestData> requestDataList = new ConcurrentLinkedQueue<>();
 
-        public RequestStat registerRequest() {
-            RequestStat requestStat = new RequestStat();
-            requestStatList.add(requestStat);
-            return requestStat;
+        public RequestData registerRequest() {
+            RequestData requestData = new RequestData();
+            requestDataList.add(requestData);
+            return requestData;
         }
 
         public void save() {
-            requestStatList.forEach(RequestStat::save);
+            requestDataList.forEach(RequestData::save);
         }
 
-        public static class RequestStat {
+        public static class RequestData {
             public long startTask = 0;
             public long taskTime = 0;
 
             public long startClient = 0;
             public long clientTime = 0;
+
+            public ByteBuffer byteBuffer = null;
 
             public void save() {}
         }

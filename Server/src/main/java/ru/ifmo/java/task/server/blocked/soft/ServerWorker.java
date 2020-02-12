@@ -23,42 +23,37 @@ public class ServerWorker implements Runnable {
     private final ClientStat clientStat;
 
     public ServerWorker(BlockedSoftServer blockedSoftServer, Socket socket, ClientStat clientStat) throws IOException {
-        this.clientStat = clientStat;
+        this.blockedSoftServer = blockedSoftServer;
 
         this.socket = socket;
         input = socket.getInputStream();
         output = socket.getOutputStream();
 
-        this.blockedSoftServer = blockedSoftServer;
+        this.clientStat = clientStat;
     }
 
     @Override
     public void run() {
         try {
             while (true) {
-                RequestStat requestStat = clientStat.registerRequest();
+                RequestData requestData = clientStat.registerRequest();
+                requestData.startClient = System.currentTimeMillis();
 
-                requestStat.startClient = System.currentTimeMillis();
-
-                Request request = getRequest();
-
-                requestStat.startTask = System.currentTimeMillis();
-                List<Integer> sortedList = Constants.SORT.apply(request.getElemList());
-                requestStat.taskTime = System.currentTimeMillis() - requestStat.startTask;
-
-                sendResponse(request, sortedList);
-
-                requestStat.clientTime = System.currentTimeMillis() - requestStat.startClient;
+                sendResponse(processRequest(getRequest(), requestData), requestData);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            try {
-                socket.close();
-                blockedSoftServer.stop();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            close();
+        }
+    }
+
+    private void close() {
+        try {
+            socket.close();
+            blockedSoftServer.stop();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -70,14 +65,22 @@ public class ServerWorker implements Runnable {
         return request;
     }
 
-    private void sendResponse(Request request, List<Integer> sortedList) throws IOException {
-        Response response = Response.newBuilder()
+    private Response processRequest(Request request, RequestData requestData) {
+        requestData.startTask = System.currentTimeMillis();
+        List<Integer> sortedList = Constants.SORT.apply(request.getElemList());
+        requestData.taskTime = System.currentTimeMillis() - requestData.startTask;
+
+        return Response.newBuilder()
                 .setSize(request.getSize())
                 .addAllElem(sortedList)
                 .build();
+    }
 
+    private void sendResponse(Response response, RequestData requestData) throws IOException {
         int packageSize = response.getSerializedSize();
         output.write(ByteBuffer.allocate(Constants.INT_SIZE).putInt(packageSize).array());
         response.writeTo(output);
+
+        requestData.clientTime = System.currentTimeMillis() - requestData.startClient;
     }
 }

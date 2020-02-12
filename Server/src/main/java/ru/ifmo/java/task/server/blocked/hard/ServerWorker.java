@@ -50,13 +50,10 @@ public class ServerWorker {
         return () -> {
             try {
                 while (!Thread.interrupted()) {
-                    RequestStat requestStat = clientStat.registerRequest();
+                    RequestData requestData = clientStat.registerRequest();
+                    requestData.startClient = System.currentTimeMillis();
 
-                    requestStat.startClient = System.currentTimeMillis();
-
-                    Request request = getRequest();
-
-                    pool.submit(initTask(request, requestStat));
+                    pool.submit(initTask(getRequest(), requestData));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -64,14 +61,6 @@ public class ServerWorker {
                 close();
             }
        };
-    }
-
-    private Request getRequest() throws IOException {
-        byte[] protoBuf = Lib.receive(input);
-        Request request = Request.parseFrom(protoBuf);
-
-        assert request != null;
-        return request;
     }
 
     private void close() {
@@ -84,34 +73,49 @@ public class ServerWorker {
         }
     }
 
-    private Runnable initTask(Request request, RequestStat requestStat) {
+    private Runnable initTask(Request request, RequestData requestData) {
         return () -> {
-            requestStat.startTask = System.currentTimeMillis();
-            List<Integer> sortedList = Constants.SORT.apply(request.getElemList());
-            requestStat.taskTime = System.currentTimeMillis() - requestStat.startTask;
-
-            Response response = Response.newBuilder()
-                    .setSize(request.getSize())
-                    .addAllElem(sortedList)
-                    .build();
-
-            outputExecutor.submit(initOutputExecutor(response, requestStat));
+            Response response = processRequest(request, requestData);
+            outputExecutor.submit(initOutputExecutor(response, requestData));
         };
     }
 
-    private Runnable initOutputExecutor(Response response, RequestStat requestStat) {
+    private Runnable initOutputExecutor(Response response, RequestData requestData) {
         return () -> {
             try {
-                int packageSize = response.getSerializedSize();
-                output.write(ByteBuffer.allocate(Constants.INT_SIZE).putInt(packageSize).array());
-                response.writeTo(output);
-
-                requestStat.clientTime = System.currentTimeMillis() - requestStat.startClient;
+                sendResponse(response, requestData);
             } catch(IOException e) {
                 e.printStackTrace();
             } finally {
                 close();
             }
         };
+    }
+
+    private Request getRequest() throws IOException {
+        byte[] protoBuf = Lib.receive(input);
+        Request request = Request.parseFrom(protoBuf);
+
+        assert request != null;
+        return request;
+    }
+
+    private Response processRequest(Request request, RequestData requestData) {
+        requestData.startTask = System.currentTimeMillis();
+        List<Integer> sortedList = Constants.SORT.apply(request.getElemList());
+        requestData.taskTime = System.currentTimeMillis() - requestData.startTask;
+
+        return Response.newBuilder()
+                .setSize(request.getSize())
+                .addAllElem(sortedList)
+                .build();
+    }
+
+    private void sendResponse(Response response, RequestData requestData) throws IOException {
+        int packageSize = response.getSerializedSize();
+        output.write(ByteBuffer.allocate(Constants.INT_SIZE).putInt(packageSize).array());
+        response.writeTo(output);
+
+        requestData.clientTime = System.currentTimeMillis() - requestData.startClient;
     }
 }

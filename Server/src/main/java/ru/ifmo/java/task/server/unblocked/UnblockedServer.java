@@ -6,15 +6,12 @@ import ru.ifmo.java.task.server.AbstractServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class UnblockedServer extends AbstractServer {
     private Selector inputSelector;
@@ -23,8 +20,7 @@ public class UnblockedServer extends AbstractServer {
     private ExecutorService pool;
     private ServerSocketChannel serverSocketChannel;
 
-    private final Lock inputLock = new ReentrantLock();
-    private final Lock outputLock = new ReentrantLock();
+    private List<ServerWorker> serverWorkers = new ArrayList<>();
 
     public UnblockedServer(ServerStat serverStat) {
         super(serverStat);
@@ -33,6 +29,17 @@ public class UnblockedServer extends AbstractServer {
     @Override
     public void run() throws IOException {
         pool = Executors.newFixedThreadPool(Constants.NTHREADS);
+
+        serverSocketChannel = ServerSocketChannel.open();
+        serverSocketChannel.bind(new InetSocketAddress(Constants.LOCALHOST, Constants.UNBLOCKED_PORT));
+
+        for (int i = 0; i < serverStat.getClientsNum(); i++) {
+            SocketChannel socketChannel = serverSocketChannel.accept();
+            socketChannel.configureBlocking(false);
+
+            serverWorkers.add(new ServerWorker(this, socketChannel, serverStat.registerClient(),
+                    pool, outputSelector));
+        }
 
         inputSelector = Selector.open();
         Thread inputSelectorThread = new Thread(initInputSelectorThread());
@@ -43,38 +50,37 @@ public class UnblockedServer extends AbstractServer {
         Thread outputSelectorThread = new Thread(initOutputSelectorThread());
         outputSelectorThread.setDaemon(true);
         outputSelectorThread.start();
-
-        serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.bind(new InetSocketAddress(Constants.LOCALHOST, Constants.UNBLOCKED_PORT));
-
-        while (true) {
-            SocketChannel socketChannel = serverSocketChannel.accept();
-            socketChannel.configureBlocking(false);
-
-            ServerWorker serverWorker = new ServerWorker(serverStat, pool, socketChannel, outputSelector, outputLock);
-
-            inputLock.lock();
-            inputSelector.wakeup();
-            socketChannel.register(inputSelector, SelectionKey.OP_READ, serverWorker);
-            inputLock.unlock();
-        }
     }
 
     @Override
-    public void stop() throws IOException {
-        inputSelector.close();
-        outputSelector.close();
-        serverSocketChannel.close();
-        pool.shutdown();
+    public void stop() {
+        try {
+            serverStat.save();
+
+            inputSelector.close();
+            outputSelector.close();
+
+            serverSocketChannel.close();
+
+            pool.shutdown();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private Runnable initInputSelectorThread() {
+        for (ServerWorker serverWorker : serverWorkers) {
+            SocketChannel socketChannel = serverWorker.getSocketChannel();
+            try {
+                socketChannel.register(inputSelector, SelectionKey.OP_READ, serverWorker);
+            } catch (ClosedChannelException e) {
+                stop();
+            }
+        }
+
         return () -> {
             try {
                 while (!Thread.interrupted()) {
-                    inputLock.lock();
-                    inputLock.unlock();
-
                     inputSelector.select();
                     Iterator<SelectionKey> keyIterator = inputSelector.selectedKeys().iterator();
 
@@ -85,7 +91,7 @@ public class UnblockedServer extends AbstractServer {
                             ServerWorker serverWorker = (ServerWorker) selectionKey.attachment();
 
                             assert serverWorker != null;
-                            serverWorker.readAndHandle();
+                            serverWorker.getRequestAndHandle();
                         }
 
                         keyIterator.remove();
@@ -93,6 +99,8 @@ public class UnblockedServer extends AbstractServer {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                stop();
             }
         };
     }
@@ -101,9 +109,6 @@ public class UnblockedServer extends AbstractServer {
         return () -> {
             try {
                 while (!Thread.interrupted()) {
-                    outputLock.lock();
-                    outputLock.unlock();
-
                     outputSelector.select();
                     Iterator<SelectionKey> keyIterator = outputSelector.selectedKeys().iterator();
 
@@ -120,9 +125,20 @@ public class UnblockedServer extends AbstractServer {
                         keyIterator.remove();
                         selectionKey.cancel();
                     }
+
+                    for (ServerWorker serverWorker : serverWorkers) {
+                        if (serverWorker.isBufferQueueNotEmpty()) {
+                            SocketChannel socketChannel = serverWorker.getSocketChannel();
+                            if (socketChannel.keyFor(outputSelector) == null) {
+                                socketChannel.register(outputSelector, SelectionKey.OP_WRITE, serverWorker);
+                            }
+                        }
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                stop();
             }
         };
     }

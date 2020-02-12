@@ -11,8 +11,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class BlockedSoftServer extends AbstractServer {
-    public ExecutorService pool;
-    public ServerSocket serverSocket;
+    private ExecutorService pool;
+    private ServerSocket serverSocket;
 
     public BlockedSoftServer(ServerStat serverStat) {
         super(serverStat);
@@ -33,6 +33,7 @@ public class BlockedSoftServer extends AbstractServer {
     public void stop() {
         serverStat.save();
         pool.shutdown();
+
         try {
             serverSocket.close();
         } catch (IOException e) {
