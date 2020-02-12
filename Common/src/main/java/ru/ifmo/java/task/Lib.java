@@ -3,8 +3,6 @@ package ru.ifmo.java.task;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Lib {
     public static byte[] receive(InputStream input) throws IOException {

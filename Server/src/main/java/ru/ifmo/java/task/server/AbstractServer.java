@@ -11,6 +11,6 @@ public abstract class AbstractServer {
 
     public abstract void run() throws IOException;
 
-    public abstract void stop() throws IOException;
+    public abstract void stop();
 }
 

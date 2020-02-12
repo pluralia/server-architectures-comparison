@@ -23,16 +23,21 @@ public class BlockedSoftServer extends AbstractServer {
         pool = Executors.newCachedThreadPool();
         serverSocket = new ServerSocket(Constants.BLOCKED_SOFT_PORT);
 
-        while (true) {
+        for (int i = 0; i < serverStat.getClientsNum(); i++) {
             Socket socket = serverSocket.accept();
-            pool.submit(new ServerWorker(serverStat, socket));
+            pool.submit(new ServerWorker(this, socket, serverStat.registerClient()));
         }
     }
 
     @Override
-    public void stop() throws IOException {
+    public void stop() {
+        serverStat.save();
         pool.shutdown();
-        serverSocket.close();
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

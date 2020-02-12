@@ -9,13 +9,10 @@ import java.io.IOException;
 
 public class ServerManager {
     private AbstractServer server;
-    private ServerStat serverStat;
 
-    public ServerManager(ServerStat serverStat) {
-        this.serverStat = serverStat;
-    }
+    public void run(int clientNum, String architectureType) {
+        ServerStat serverStat = new ServerStat(clientNum);
 
-    public void run(String architectureType) throws IOException {
         switch (architectureType) {
             case Constants.BLOCKED_SOFT:
                 server = new BlockedSoftServer(serverStat);
@@ -27,11 +24,14 @@ public class ServerManager {
                 server = new UnblockedServer(serverStat);
                 break;
         }
-        server.run();
-    }
 
-    public void stop() throws IOException {
-        server.stop();
+        try {
+            server.run();
+        } catch(IOException e) {
+            server.stop();
+        } finally {
+            server.stop();
+        }
     }
 }
 
