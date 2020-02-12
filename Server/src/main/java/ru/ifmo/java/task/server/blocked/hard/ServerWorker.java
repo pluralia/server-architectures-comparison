@@ -4,7 +4,8 @@ import ru.ifmo.java.task.Constants;
 import ru.ifmo.java.task.Lib;
 import ru.ifmo.java.task.protocol.Protocol.Request;
 import ru.ifmo.java.task.protocol.Protocol.Response;
-import ru.ifmo.java.task.server.ServerStat;
+import ru.ifmo.java.task.server.ServerStat.*;
+import ru.ifmo.java.task.server.ServerStat.ClientStat.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,34 +17,31 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ServerWorker {
-    private final ServerStat serverStat;
+    private final BlockedHardServer blockedHardServer;
 
     private final Socket socket;
     private final InputStream input;
     private final OutputStream output;
 
+    private final ClientStat clientStat;
+
+
     private final ExecutorService pool;
 
-    private final Thread inputThread;
     private final ExecutorService outputExecutor = Executors.newSingleThreadExecutor();
 
-    // we work with time in different threads to get statistic;
-    // it's okay for our goals when we want to get general statistic
-    // so - we interested in the difference between moments of start and finish for all requires
-    // and the order of math operations for this goal doesn't matter
-    private long startClientOnServer = 0;
-    private long finishClientOnServer = 0;
-
-    public ServerWorker(ServerStat serverStat, Socket socket, ExecutorService pool) throws IOException {
-        this.serverStat = serverStat;
+    public ServerWorker(BlockedHardServer blockedHardServer, Socket socket, ClientStat clientStat, ExecutorService pool) throws IOException {
+        this.blockedHardServer = blockedHardServer;
 
         this.socket = socket;
         input = socket.getInputStream();
         output = socket.getOutputStream();
 
+        this.clientStat = clientStat;
+
         this.pool = pool;
 
-        inputThread = new Thread(initInputThread());
+        Thread inputThread = new Thread(initInputThread());
         inputThread.setDaemon(true);
         inputThread.start();
     }
@@ -52,54 +50,67 @@ public class ServerWorker {
         return () -> {
             try {
                 while (!Thread.interrupted()) {
-                    startClientOnServer = System.currentTimeMillis();
+                    RequestStat requestStat = clientStat.registerRequest();
 
-                    byte[] protoBuf = Lib.receive(input);
-                    Request request = Request.parseFrom(protoBuf);
-                    assert request != null;
+                    requestStat.startClient = System.currentTimeMillis();
 
-                    pool.submit(initTask(request));
+                    Request request = getRequest();
+
+                    pool.submit(initTask(request, requestStat));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                try {
-                    socket.close();
-                    outputExecutor.shutdown();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                close();
             }
-        };
+       };
     }
 
-    private Runnable initTask(Request request) {
+    private Request getRequest() throws IOException {
+        byte[] protoBuf = Lib.receive(input);
+        Request request = Request.parseFrom(protoBuf);
+
+        assert request != null;
+        return request;
+    }
+
+    private void close() {
+        try {
+            socket.close();
+            outputExecutor.shutdown();
+            blockedHardServer.stop();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Runnable initTask(Request request, RequestStat requestStat) {
         return () -> {
-            long start = System.currentTimeMillis();
+            requestStat.startTask = System.currentTimeMillis();
             List<Integer> sortedList = Constants.SORT.apply(request.getElemList());
-            long finish = System.currentTimeMillis();
-            serverStat.taskOnServer.addAndGet(finish - start);
+            requestStat.taskTime = System.currentTimeMillis() - requestStat.startTask;
 
             Response response = Response.newBuilder()
                     .setSize(request.getSize())
                     .addAllElem(sortedList)
                     .build();
 
-            outputExecutor.submit(initOutputExecutor(response));
+            outputExecutor.submit(initOutputExecutor(response, requestStat));
         };
     }
 
-    private Runnable initOutputExecutor(Response response) {
+    private Runnable initOutputExecutor(Response response, RequestStat requestStat) {
         return () -> {
             try {
                 int packageSize = response.getSerializedSize();
                 output.write(ByteBuffer.allocate(Constants.INT_SIZE).putInt(packageSize).array());
                 response.writeTo(output);
 
-                finishClientOnServer = System.currentTimeMillis();
-                serverStat.clientOnServer.addAndGet(finishClientOnServer - startClientOnServer);
+                requestStat.clientTime = System.currentTimeMillis() - requestStat.startClient;
             } catch(IOException e) {
                 e.printStackTrace();
+            } finally {
+                close();
             }
         };
     }

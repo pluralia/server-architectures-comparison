@@ -38,17 +38,17 @@ public class ServerWorker implements Runnable {
             while (true) {
                 RequestStat requestStat = clientStat.registerRequest();
 
-                long startClient = System.currentTimeMillis();
+                requestStat.startClient = System.currentTimeMillis();
 
                 Request request = getRequest();
 
-                long startTask = System.currentTimeMillis();
+                requestStat.startTask = System.currentTimeMillis();
                 List<Integer> sortedList = Constants.SORT.apply(request.getElemList());
-                requestStat.taskTime = System.currentTimeMillis() - startTask;
+                requestStat.taskTime = System.currentTimeMillis() - requestStat.startTask;
 
                 sendResponse(request, sortedList);
 
-                requestStat.clientTime = System.currentTimeMillis() - startClient;
+                requestStat.clientTime = System.currentTimeMillis() - requestStat.startClient;
             }
         } catch (IOException e) {
             e.printStackTrace();

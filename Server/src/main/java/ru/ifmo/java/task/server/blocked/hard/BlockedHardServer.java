@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
 public class BlockedHardServer extends AbstractServer {
     public ExecutorService pool;
     public ServerSocket serverSocket;
@@ -23,15 +24,20 @@ public class BlockedHardServer extends AbstractServer {
         pool = Executors.newFixedThreadPool(Constants.NTHREADS);
         serverSocket = new ServerSocket(Constants.BLOCKED_HARD_PORT);
 
-        while (true) {
+        for (int i = 0; i < serverStat.getClientsNum(); i++) {
             Socket socket = serverSocket.accept();
-            new ServerWorker(serverStat, socket, pool);
+            new ServerWorker(this, socket, serverStat.registerClient(), pool);
         }
     }
 
     @Override
-    public void stop() throws IOException {
+    public void stop() {
+        serverStat.save();
         pool.shutdown();
-        serverSocket.close();
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
