@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class ServerWorker implements Runnable {
     private final BlockedSoftServer blockedSoftServer;
@@ -22,7 +23,10 @@ public class ServerWorker implements Runnable {
 
     private final ClientStat clientStat;
 
-    public ServerWorker(BlockedSoftServer blockedSoftServer, Socket socket, ClientStat clientStat) throws IOException {
+    private final CountDownLatch countDownLatch;
+
+    public ServerWorker(BlockedSoftServer blockedSoftServer, Socket socket, ClientStat clientStat,
+                        CountDownLatch countDownLatch) throws IOException {
         this.blockedSoftServer = blockedSoftServer;
 
         this.socket = socket;
@@ -30,30 +34,33 @@ public class ServerWorker implements Runnable {
         output = socket.getOutputStream();
 
         this.clientStat = clientStat;
+
+        this.countDownLatch = countDownLatch;
+        countDownLatch.countDown();
     }
 
     @Override
     public void run() {
         try {
+            countDownLatch.await();
             while (true) {
                 RequestData requestData = clientStat.registerRequest();
                 requestData.startClient = System.currentTimeMillis();
 
                 sendResponse(processRequest(getRequest(), requestData), requestData);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+        } catch (IOException | InterruptedException e) {
             close();
         }
     }
 
     private void close() {
         try {
+            System.out.println("SERVER WORKER CLOSE");
             socket.close();
+            clientStat.save();
             blockedSoftServer.stop();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignore) {
         }
     }
 

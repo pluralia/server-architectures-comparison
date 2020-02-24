@@ -18,13 +18,11 @@ public class ServerStat {
     }
 
     public ClientStat registerClient() {
-        if (clientStatList.size() < clientsNum) {
-            ClientStat clientStat = new ClientStat();
-            clientStatList.add(clientStat);
-            return clientStat;
-        } else {
-            throw new IndexOutOfBoundsException("You register too many clients!");
-        }
+        assert clientStatList.size() > clientsNum;
+
+        ClientStat clientStat = new ClientStat();
+        clientStatList.add(clientStat);
+        return clientStat;
     }
 
     public void save() {
@@ -54,7 +52,10 @@ public class ServerStat {
 
             public ByteBuffer byteBuffer = null;
 
-            public void save() {}
+            public void save() {
+                System.out.println("taskTime: " + taskTime);
+                System.out.println("clientTime: " + clientTime);
+            }
         }
     }
 }

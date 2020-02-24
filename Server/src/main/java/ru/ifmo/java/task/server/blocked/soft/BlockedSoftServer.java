@@ -7,6 +7,7 @@ import ru.ifmo.java.task.server.ServerStat;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -23,15 +24,16 @@ public class BlockedSoftServer extends AbstractServer {
         pool = Executors.newCachedThreadPool();
         serverSocket = new ServerSocket(Constants.BLOCKED_SOFT_PORT);
 
+        CountDownLatch countDownLatch = new CountDownLatch(serverStat.getClientsNum());
+
         for (int i = 0; i < serverStat.getClientsNum(); i++) {
             Socket socket = serverSocket.accept();
-            pool.submit(new ServerWorker(this, socket, serverStat.registerClient()));
+            pool.submit(new ServerWorker(this, socket, serverStat.registerClient(), countDownLatch));
         }
     }
 
     @Override
     public void stop() {
-        serverStat.save();
         pool.shutdown();
 
         try {
@@ -41,4 +43,3 @@ public class BlockedSoftServer extends AbstractServer {
         }
     }
 }
-

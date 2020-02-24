@@ -10,6 +10,10 @@ import java.io.IOException;
 public class ServerManager {
     private AbstractServer server;
 
+    public static void main(String[] args) throws IOException {
+        new ServerManager().run(1, Constants.BLOCKED_SOFT);
+    }
+
     public void run(int clientNum, String architectureType) {
         ServerStat serverStat = new ServerStat(clientNum);
 
@@ -27,9 +31,8 @@ public class ServerManager {
 
         try {
             server.run();
-        } catch(IOException e) {
-            server.stop();
-        } finally {
+        } catch(IOException ignore) {
+            System.out.println("SERVER MANAGER");
             server.stop();
         }
     }
