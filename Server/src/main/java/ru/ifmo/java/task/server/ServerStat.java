@@ -3,14 +3,17 @@ package ru.ifmo.java.task.server;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ServerStat {
     private int clientsNum;
+    private int tasksNum;
     private List<ClientStat> clientStatList = new ArrayList<>();
 
-    public ServerStat(int clientsNum) {
+    public ServerStat(int clientsNum, int tasksNum) {
         this.clientsNum = clientsNum;
+        this.tasksNum = tasksNum;
     }
 
     public int getClientsNum() {
@@ -20,7 +23,7 @@ public class ServerStat {
     public ClientStat registerClient() {
         assert clientStatList.size() > clientsNum;
 
-        ClientStat clientStat = new ClientStat();
+        ClientStat clientStat = new ClientStat(tasksNum);
         clientStatList.add(clientStat);
         return clientStat;
     }
@@ -31,19 +34,39 @@ public class ServerStat {
     }
 
     public static class ClientStat {
-        private ConcurrentLinkedQueue<RequestData> requestDataList = new ConcurrentLinkedQueue<>();
+        private ConcurrentLinkedQueue<TaskData> taskDataQueue = new ConcurrentLinkedQueue<>();
+        private final int tasksNum;
 
-        public RequestData registerRequest() {
-            RequestData requestData = new RequestData();
-            requestDataList.add(requestData);
-            return requestData;
+        public long startWaitFor = 0;
+        public long waitForTime = 0;
+
+        public ClientStat(int tasksNum) {
+            this.tasksNum = tasksNum;
+        }
+
+        public int getTasksNum() {
+            return tasksNum;
+        }
+
+        public TaskData registerRequest() {
+            TaskData taskData = new TaskData();
+            taskDataQueue.add(taskData);
+            return taskData;
         }
 
         public void save() {
-            requestDataList.forEach(RequestData::save);
+            System.out.println("CLIENT");
+            taskDataQueue.removeIf(TaskData::isNotDone);
+
+            System.out.println("WaitForTime: " + waitForTime);
+
+            while (!taskDataQueue.isEmpty()) {
+                System.out.print(taskDataQueue.size() + ": ");
+                Objects.requireNonNull(taskDataQueue.poll()).save();
+            }
         }
 
-        public static class RequestData {
+        public static class TaskData {
             public long startTask = 0;
             public long taskTime = 0;
 
@@ -52,9 +75,12 @@ public class ServerStat {
 
             public ByteBuffer byteBuffer = null;
 
+            public boolean isNotDone() {
+                return taskTime == 0 || clientTime == 0;
+            }
+
             public void save() {
-                System.out.println("taskTime: " + taskTime);
-                System.out.println("clientTime: " + clientTime);
+                System.out.println("taskTime: " + taskTime + " | clientTime: " + clientTime);
             }
         }
     }

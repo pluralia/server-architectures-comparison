@@ -28,7 +28,7 @@ public class UnblockedServer extends AbstractServer {
 
     @Override
     public void run() throws IOException {
-        pool = Executors.newFixedThreadPool(Constants.NTHREADS);
+        pool = Executors.newFixedThreadPool(Constants.NCORES);
 
         serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.bind(new InetSocketAddress(Constants.LOCALHOST, Constants.UNBLOCKED_PORT));

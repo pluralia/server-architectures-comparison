@@ -9,8 +9,7 @@ public abstract class AbstractServer {
         this.serverStat = serverStat;
     }
 
-    public abstract void run() throws IOException;
+    public abstract void run() throws IOException, InterruptedException;
 
-    public abstract void stop();
+    public abstract void stop() throws IOException, InterruptedException;
 }
-

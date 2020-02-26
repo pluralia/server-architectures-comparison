@@ -50,10 +50,10 @@ public class ServerWorker {
         return () -> {
             try {
                 while (!Thread.interrupted()) {
-                    RequestData requestData = clientStat.registerRequest();
-                    requestData.startClient = System.currentTimeMillis();
+                    TaskData taskData = clientStat.registerRequest();
+                    taskData.startClient = System.currentTimeMillis();
 
-                    pool.submit(initTask(getRequest(), requestData));
+                    pool.submit(initTask(getRequest(), taskData));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -73,17 +73,17 @@ public class ServerWorker {
         }
     }
 
-    private Runnable initTask(Request request, RequestData requestData) {
+    private Runnable initTask(Request request, TaskData taskData) {
         return () -> {
-            Response response = processRequest(request, requestData);
-            outputExecutor.submit(initOutputExecutor(response, requestData));
+            Response response = processRequest(request, taskData);
+            outputExecutor.submit(initOutputExecutor(response, taskData));
         };
     }
 
-    private Runnable initOutputExecutor(Response response, RequestData requestData) {
+    private Runnable initOutputExecutor(Response response, TaskData taskData) {
         return () -> {
             try {
-                sendResponse(response, requestData);
+                sendResponse(response, taskData);
             } catch(IOException e) {
                 e.printStackTrace();
             } finally {
@@ -100,10 +100,10 @@ public class ServerWorker {
         return request;
     }
 
-    private Response processRequest(Request request, RequestData requestData) {
-        requestData.startTask = System.currentTimeMillis();
+    private Response processRequest(Request request, TaskData taskData) {
+        taskData.startTask = System.currentTimeMillis();
         List<Integer> sortedList = Constants.SORT.apply(request.getElemList());
-        requestData.taskTime = System.currentTimeMillis() - requestData.startTask;
+        taskData.taskTime = System.currentTimeMillis() - taskData.startTask;
 
         return Response.newBuilder()
                 .setSize(request.getSize())
@@ -111,11 +111,11 @@ public class ServerWorker {
                 .build();
     }
 
-    private void sendResponse(Response response, RequestData requestData) throws IOException {
+    private void sendResponse(Response response, TaskData taskData) throws IOException {
         int packageSize = response.getSerializedSize();
         output.write(ByteBuffer.allocate(Constants.INT_SIZE).putInt(packageSize).array());
         response.writeTo(output);
 
-        requestData.clientTime = System.currentTimeMillis() - requestData.startClient;
+        taskData.clientTime = System.currentTimeMillis() - taskData.startClient;
     }
 }

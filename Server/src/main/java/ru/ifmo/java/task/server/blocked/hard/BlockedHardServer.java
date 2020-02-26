@@ -21,7 +21,7 @@ public class BlockedHardServer extends AbstractServer {
 
     @Override
     public void run() throws IOException {
-        pool = Executors.newFixedThreadPool(Constants.NTHREADS);
+        pool = Executors.newFixedThreadPool(Constants.NCORES);
         serverSocket = new ServerSocket(Constants.BLOCKED_HARD_PORT);
 
         for (int i = 0; i < serverStat.getClientsNum(); i++) {

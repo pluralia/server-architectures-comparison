@@ -28,11 +28,11 @@ public class ServerWorker {
     private int numOfBytes = 0;
 
     private boolean isFirst = true;
-    private RequestData currRequestData;
+    private TaskData currTaskData;
 
     private ByteBuffer head = ByteBuffer.allocate(Constants.INT_SIZE);
     private ByteBuffer body;
-    private ConcurrentLinkedQueue<RequestData> bufferQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<TaskData> bufferQueue = new ConcurrentLinkedQueue<>();
 
     public ServerWorker(UnblockedServer unblockedServer, SocketChannel socketChannel, ClientStat clientStat,
                         ExecutorService pool, Selector outputSelector) {
@@ -60,8 +60,8 @@ public class ServerWorker {
 
     public void getRequestAndHandle() throws IOException {
         if (isFirst) {
-            currRequestData = clientStat.registerRequest();
-            currRequestData.startClient = System.currentTimeMillis();
+            currTaskData = clientStat.registerRequest();
+            currTaskData.startClient = System.currentTimeMillis();
             isFirst = false;
         }
 
@@ -87,7 +87,7 @@ public class ServerWorker {
                 Request request = Request.parseFrom(protoBuf);
                 assert request != null;
 
-                pool.submit(initTask(request, currRequestData));
+                pool.submit(initTask(request, currTaskData));
 
                 numOfBytes = 0;
                 isSizeReading = true;
@@ -101,14 +101,14 @@ public class ServerWorker {
         }
     }
 
-    private Runnable initTask(Request request, RequestData requestData) {
+    private Runnable initTask(Request request, TaskData taskData) {
         return () -> {
-            Response response = processRequest(request, requestData);
-            putOnQueue(response, requestData);
+            Response response = processRequest(request, taskData);
+            putOnQueue(response, taskData);
         };
     }
 
-    private void putOnQueue(Response response, RequestData requestData) {
+    private void putOnQueue(Response response, TaskData taskData) {
         try {
             ByteArrayOutputStream protoBufOS = new ByteArrayOutputStream(response.getSerializedSize());
             response.writeTo(protoBufOS);
@@ -117,8 +117,8 @@ public class ServerWorker {
             result.put(protoBufOS.toByteArray());
             result.flip();
 
-            requestData.byteBuffer = result;
-            bufferQueue.add(requestData);
+            taskData.byteBuffer = result;
+            bufferQueue.add(taskData);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -133,8 +133,8 @@ public class ServerWorker {
     public synchronized void writeRes() throws IOException {
         assert !bufferQueue.isEmpty();
 
-        RequestData requestData = bufferQueue.poll();
-        ByteBuffer result = requestData.byteBuffer;
+        TaskData taskData = bufferQueue.poll();
+        ByteBuffer result = taskData.byteBuffer;
 
         ByteBuffer sizeBB = ByteBuffer.allocate(Constants.INT_SIZE).putInt(result.remaining());
         sizeBB.flip();
@@ -149,13 +149,13 @@ public class ServerWorker {
             socketChannel.write(result);
         }
 
-        requestData.clientTime = System.currentTimeMillis() - requestData.startClient;
+        taskData.clientTime = System.currentTimeMillis() - taskData.startClient;
     }
 
-    private Response processRequest(Request request, RequestData requestData) {
-        requestData.startTask = System.currentTimeMillis();
+    private Response processRequest(Request request, TaskData taskData) {
+        taskData.startTask = System.currentTimeMillis();
         List<Integer> sortedList = Constants.SORT.apply(request.getElemList());
-        requestData.taskTime = System.currentTimeMillis() - requestData.startTask;
+        taskData.taskTime = System.currentTimeMillis() - taskData.startTask;
 
         return Response.newBuilder()
                 .setSize(request.getSize())

@@ -11,11 +11,11 @@ public class ServerManager {
     private AbstractServer server;
 
     public static void main(String[] args) throws IOException {
-        new ServerManager().run(1, Constants.BLOCKED_SOFT);
+        new ServerManager().run(Constants.BLOCKED_SOFT, 20, 8);
     }
 
-    public void run(int clientNum, String architectureType) {
-        ServerStat serverStat = new ServerStat(clientNum);
+    public void run(String architectureType, int clientNum, int tasksNum) throws IOException {
+        ServerStat serverStat = new ServerStat(clientNum, tasksNum);
 
         switch (architectureType) {
             case Constants.BLOCKED_SOFT:
@@ -31,9 +31,9 @@ public class ServerManager {
 
         try {
             server.run();
-        } catch(IOException ignore) {
+        } catch(IOException | InterruptedException ignore) {
             System.out.println("SERVER MANAGER");
-            server.stop();
+            ignore.printStackTrace();
         }
     }
 }
