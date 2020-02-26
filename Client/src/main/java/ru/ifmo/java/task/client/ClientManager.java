@@ -14,17 +14,17 @@ public class ClientManager {
     private ClientStat clientStat = new ClientStat();
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        new ClientManager().run(Constants.BLOCKED_HARD_PORT, 10, 4, 1000, 1000);
+        new ClientManager().run(Constants.BLOCKED_SOFT_PORT, 10, 4, 1000, 0);
     }
 
     public void run(int port, int clientsNum, int taskNum, int taskSize, int sleepTime) throws InterruptedException, IOException {
         ExecutorService pool = Executors.newFixedThreadPool(clientsNum);
 
         for (int i = 0; i < clientsNum; i++) {
-            pool.execute(new Client(port, taskNum, taskSize, sleepTime, clientStat.addClient()));
+            pool.submit(new Client(port, taskNum, taskSize, sleepTime, clientStat.registerClient()));
 
             // simulate clients connections at different moments
-            Thread.sleep(100);
+//            Thread.sleep(1000);
         }
 
         pool.shutdown();
@@ -36,7 +36,7 @@ public class ClientManager {
     public static class ClientStat {
         private final List<AtomicLong> statList = new ArrayList<>();
 
-        public AtomicLong addClient() {
+        public AtomicLong registerClient() {
             AtomicLong stat = new AtomicLong(0);
             statList.add(stat);
             return stat;

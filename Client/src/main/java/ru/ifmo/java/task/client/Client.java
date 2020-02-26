@@ -27,7 +27,6 @@ public class Client implements Runnable {
     private InputStream input;
     private OutputStream output;
 
-
     public Client(int port, int taskNum, int taskSize, int sleepTime, AtomicLong stat) throws IOException {
         this.taskNum = taskNum;
         this.taskSize = taskSize;
@@ -41,21 +40,17 @@ public class Client implements Runnable {
 
     @Override
     public void run() {
-        long currTime = 0;
-
         try {
             for (int i = 0; i < taskNum; i++) {
-                stat.addAndGet(currTime);
                 long start = System.currentTimeMillis();
-
                 sendRequest(generateArray());
                 System.out.print(receiveResponse() + " ");
+                stat.addAndGet(System.currentTimeMillis() - start);
 
-                currTime = System.currentTimeMillis() - start;
                 Thread.sleep(sleepTime);
             }
         } catch (IOException | InterruptedException e) {
-            System.out.println("Client: tasks exception: " + e.getMessage());
+//            System.out.println("Client: tasks exception: " + e.getMessage());
         } finally {
             try {
                 socket.close();

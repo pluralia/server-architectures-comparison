@@ -1,7 +1,5 @@
 package ru.ifmo.java.task.server.blocked.hard;
 
-import jdk.vm.ci.meta.Constant;
-import ru.ifmo.java.task.Constants;
 import ru.ifmo.java.task.protocol.Protocol.Request;
 import ru.ifmo.java.task.protocol.Protocol.Response;
 import ru.ifmo.java.task.server.ServerStat.*;
@@ -22,6 +20,8 @@ public class ServerWorker extends AbstractBlockedServerWorker {
 
     private final ExecutorService pool;
     private final ExecutorService outputPool = Executors.newSingleThreadExecutor();
+
+    private int taskCounter = clientStat.getTasksNum();
 
     public ServerWorker(Socket socket, ExecutorService pool, ClientStat clientStat,
                         CountDownLatch startSignal, CountDownLatch doneSignal) throws IOException {
@@ -45,11 +45,10 @@ public class ServerWorker extends AbstractBlockedServerWorker {
                     TaskData taskData = clientStat.registerRequest();
                     taskData.startClient = System.currentTimeMillis();
 
-                    pool.submit(initTask(getRequest(), taskData));
+                    pool.submit(initTask(getRequest(taskData), taskData));
                 }
             } catch(IOException | InterruptedException e) {
-                System.out.println("Server: input thread exception: " + e.getMessage());
-            } finally {
+//                System.out.println("Server: input thread exception: " + e.getMessage());
                 doneSignal.countDown();
             }
        };
@@ -72,9 +71,13 @@ public class ServerWorker extends AbstractBlockedServerWorker {
         return () -> {
             try {
                 sendResponse(response, taskData);
+                taskCounter -= 1;
+
+                if (taskCounter == 0) {
+                    doneSignal.countDown();
+                }
             } catch(IOException e) {
-                System.out.println("Server: output thread exception: " + e.getMessage());
-            } finally {
+//                System.out.println("Server: output thread exception: " + e.getMessage());
                 doneSignal.countDown();
             }
         };

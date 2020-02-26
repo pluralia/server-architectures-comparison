@@ -2,8 +2,6 @@ package ru.ifmo.java.task.server.blocked;
 
 import ru.ifmo.java.task.server.AbstractServer;
 import ru.ifmo.java.task.server.ServerStat;
-import ru.ifmo.java.task.server.ServerStat.*;
-import ru.ifmo.java.task.server.blocked.hard.ServerWorker;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -12,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 abstract public class AbstractBlockedServer extends AbstractServer {
     public ExecutorService pool;
@@ -26,7 +25,7 @@ abstract public class AbstractBlockedServer extends AbstractServer {
 
     abstract public ExecutorService initPool();
     abstract public int initServerPort();
-    abstract public AbstractBlockedServerWorker initServerWorker(Socket socket, ClientStat clientStat) throws IOException;
+    abstract public AbstractBlockedServerWorker initServerWorker(Socket socket) throws IOException;
 
     @Override
     public void run() throws IOException, InterruptedException {
@@ -36,16 +35,18 @@ abstract public class AbstractBlockedServer extends AbstractServer {
         for (int i = 0; i < serverStat.getClientsNum(); i++) {
             Socket socket = serverSocket.accept();
 
-            AbstractBlockedServerWorker serverWorker = initServerWorker(socket, serverStat.registerClient());
+            AbstractBlockedServerWorker serverWorker = initServerWorker(socket);
             serverWorkerList.add(serverWorker);
         }
         startSignal.countDown();
 
-        pool.shutdown();
-        serverSocket.close();
-
         doneSignal.await();
         serverStat.save();
+
+        serverSocket.close();
+
+        pool.shutdown();
+        pool.awaitTermination(1000, TimeUnit.SECONDS);
 
         for (final AbstractBlockedServerWorker serverWorker : serverWorkerList) {
             serverWorker.close();

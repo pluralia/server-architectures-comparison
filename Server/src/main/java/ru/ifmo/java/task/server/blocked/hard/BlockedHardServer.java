@@ -2,7 +2,6 @@ package ru.ifmo.java.task.server.blocked.hard;
 
 import ru.ifmo.java.task.Constants;
 import ru.ifmo.java.task.server.ServerStat;
-import ru.ifmo.java.task.server.ServerStat.*;
 import ru.ifmo.java.task.server.blocked.AbstractBlockedServer;
 
 import java.io.IOException;
@@ -31,7 +30,7 @@ public class BlockedHardServer extends AbstractBlockedServer {
     }
 
     @Override
-    public ServerWorker initServerWorker(Socket socket, ClientStat clientStat) throws IOException {
+    public ServerWorker initServerWorker(Socket socket) throws IOException {
         return new ServerWorker(socket, pool, serverStat.registerClient(), startSignal, doneSignal);
     }
 }
