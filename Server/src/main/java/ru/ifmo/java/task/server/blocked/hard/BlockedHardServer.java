@@ -26,7 +26,7 @@ public class BlockedHardServer extends AbstractServer {
 
         for (int i = 0; i < serverStat.getClientsNum(); i++) {
             Socket socket = serverSocket.accept();
-            new ServerWorker(this, socket, serverStat.registerClient(), pool);
+            new ServerWorker(socket, pool, serverStat.registerClient());
         }
     }
 

@@ -14,7 +14,7 @@ public class ClientManager {
     private ClientStat clientStat = new ClientStat();
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        new ClientManager().run(Constants.BLOCKED_SOFT_PORT, 20, 8, 1000, 1000);
+        new ClientManager().run(Constants.BLOCKED_SOFT_PORT, 10, 4, 1000, 1000);
     }
 
     public void run(int port, int clientsNum, int taskNum, int taskSize, int sleepTime) throws InterruptedException, IOException {
@@ -24,7 +24,7 @@ public class ClientManager {
             pool.execute(new Client(port, taskNum, taskSize, sleepTime, clientStat.addClient()));
 
             // simulate clients connections at different moments
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
 
         pool.shutdown();

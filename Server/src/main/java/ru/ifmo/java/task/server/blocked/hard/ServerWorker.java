@@ -17,8 +17,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ServerWorker {
-    private final BlockedHardServer blockedHardServer;
-
     private final Socket socket;
     private final InputStream input;
     private final OutputStream output;
@@ -30,9 +28,7 @@ public class ServerWorker {
 
     private final ExecutorService outputExecutor = Executors.newSingleThreadExecutor();
 
-    public ServerWorker(BlockedHardServer blockedHardServer, Socket socket, ClientStat clientStat, ExecutorService pool) throws IOException {
-        this.blockedHardServer = blockedHardServer;
-
+    public ServerWorker(Socket socket, ExecutorService pool, ClientStat clientStat) throws IOException {
         this.socket = socket;
         input = socket.getInputStream();
         output = socket.getOutputStream();
@@ -67,7 +63,6 @@ public class ServerWorker {
         try {
             socket.close();
             outputExecutor.shutdown();
-            blockedHardServer.stop();
         } catch (IOException e) {
             e.printStackTrace();
         }

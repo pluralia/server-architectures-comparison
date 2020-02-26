@@ -1,10 +1,11 @@
-package ru.ifmo.java.task.server.blocked.soft;
+package ru.ifmo.java.task.server.blocked;
 
 import ru.ifmo.java.task.Constants;
 import ru.ifmo.java.task.Lib;
-import ru.ifmo.java.task.protocol.Protocol.*;
-import ru.ifmo.java.task.server.ServerStat.*;
-import ru.ifmo.java.task.server.ServerStat.ClientStat.*;
+import ru.ifmo.java.task.protocol.Protocol.Request;
+import ru.ifmo.java.task.protocol.Protocol.Response;
+import ru.ifmo.java.task.server.ServerStat.ClientStat;
+import ru.ifmo.java.task.server.ServerStat.ClientStat.TaskData;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
-public class ServerWorker implements Runnable {
+public class AbstractServerWorker implements Runnable {
     private final Socket socket;
     private final InputStream input;
     private final OutputStream output;
@@ -25,8 +26,8 @@ public class ServerWorker implements Runnable {
     private final CountDownLatch start;
     private final CountDownLatch finish;
 
-    public ServerWorker(Socket socket, ExecutorService pool, ClientStat clientStat,
-                        CountDownLatch start, CountDownLatch finish) throws IOException {
+    public AbstractServerWorker(Socket socket, ExecutorService pool, ClientStat clientStat,
+                                CountDownLatch start, CountDownLatch finish) throws IOException {
         this.socket = socket;
         input = socket.getInputStream();
         output = socket.getOutputStream();
