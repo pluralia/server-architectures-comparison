@@ -14,57 +14,34 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
 
-public class AbstractServerWorker implements Runnable {
+public class AbstractBlockedServerWorker {
+    public final ClientStat clientStat;
+
+    public final CountDownLatch startSignal;
+    public final CountDownLatch doneSignal;
+
     private final Socket socket;
     private final InputStream input;
     private final OutputStream output;
 
-    private final ClientStat clientStat;
-
-    private final CountDownLatch start;
-    private final CountDownLatch finish;
-
-    public AbstractServerWorker(Socket socket, ExecutorService pool, ClientStat clientStat,
-                                CountDownLatch start, CountDownLatch finish) throws IOException {
+    public AbstractBlockedServerWorker(Socket socket, ClientStat clientStat,
+                                       CountDownLatch startSignal, CountDownLatch doneSignal) throws IOException {
         this.socket = socket;
         input = socket.getInputStream();
         output = socket.getOutputStream();
 
         this.clientStat = clientStat;
 
-        this.start = start;
-        this.finish = finish;
-
-        pool.submit(this);
-    }
-
-    @Override
-    public void run() {
-        try {
-            clientStat.startWaitFor = System.currentTimeMillis();
-            start.await();
-            clientStat.waitForTime = System.currentTimeMillis() - clientStat.startWaitFor;
-
-            for (int i = 0; i < clientStat.getTasksNum(); i++) {
-                TaskData taskData = clientStat.registerRequest();
-                taskData.startClient = System.currentTimeMillis();
-
-                sendResponse(processRequest(getRequest(), taskData), taskData);
-            }
-        } catch(IOException | InterruptedException e) {
-            System.out.println("Server: tasks exception: " + e.getMessage());
-        } finally {
-            finish.countDown();
-        }
+        this.startSignal = startSignal;
+        this.doneSignal = doneSignal;
     }
 
     public void close() throws IOException {
         socket.close();
     }
 
-    private Request getRequest() throws IOException {
+    public Request getRequest() throws IOException {
         byte[] protoBuf = Lib.receive(input);
         Request request = Request.parseFrom(protoBuf);
 
@@ -72,7 +49,7 @@ public class AbstractServerWorker implements Runnable {
         return request;
     }
 
-    private Response processRequest(Request request, TaskData taskData) {
+    public Response processRequest(Request request, TaskData taskData) {
         taskData.startTask = System.currentTimeMillis();
         List<Integer> sortedList = Constants.SORT.apply(request.getElemList());
         taskData.taskTime = System.currentTimeMillis() - taskData.startTask;
@@ -83,7 +60,7 @@ public class AbstractServerWorker implements Runnable {
                 .build();
     }
 
-    private void sendResponse(Response response, TaskData taskData) throws IOException {
+    public void sendResponse(Response response, TaskData taskData) throws IOException {
         int packageSize = response.getSerializedSize();
         output.write(ByteBuffer.allocate(Constants.INT_SIZE).putInt(packageSize).array());
         response.writeTo(output);

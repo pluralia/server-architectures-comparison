@@ -1,39 +1,31 @@
 package ru.ifmo.java.task.server.blocked.hard;
 
+import jdk.vm.ci.meta.Constant;
 import ru.ifmo.java.task.Constants;
-import ru.ifmo.java.task.Lib;
 import ru.ifmo.java.task.protocol.Protocol.Request;
 import ru.ifmo.java.task.protocol.Protocol.Response;
 import ru.ifmo.java.task.server.ServerStat.*;
 import ru.ifmo.java.task.server.ServerStat.ClientStat.*;
+import ru.ifmo.java.task.server.blocked.AbstractBlockedServerWorker;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ServerWorker {
-    private final Socket socket;
-    private final InputStream input;
-    private final OutputStream output;
-
-    private final ClientStat clientStat;
-
+public class ServerWorker extends AbstractBlockedServerWorker {
+//    public final ClientStat clientStat;
+//
+//    public final CountDownLatch startSignal;
+//    public final CountDownLatch doneSignal;
 
     private final ExecutorService pool;
+    private final ExecutorService outputPool = Executors.newSingleThreadExecutor();
 
-    private final ExecutorService outputExecutor = Executors.newSingleThreadExecutor();
-
-    public ServerWorker(Socket socket, ExecutorService pool, ClientStat clientStat) throws IOException {
-        this.socket = socket;
-        input = socket.getInputStream();
-        output = socket.getOutputStream();
-
-        this.clientStat = clientStat;
+    public ServerWorker(Socket socket, ExecutorService pool, ClientStat clientStat,
+                        CountDownLatch startSignal, CountDownLatch doneSignal) throws IOException {
+        super(socket, clientStat, startSignal, doneSignal);
 
         this.pool = pool;
 
@@ -45,72 +37,46 @@ public class ServerWorker {
     private Runnable initInputThread() {
         return () -> {
             try {
-                while (!Thread.interrupted()) {
+                clientStat.startWaitFor = System.currentTimeMillis();
+                startSignal.await();
+                clientStat.waitForTime = System.currentTimeMillis() - clientStat.startWaitFor;
+
+                for (int i = 0; i < clientStat.getTasksNum(); i++) {
                     TaskData taskData = clientStat.registerRequest();
                     taskData.startClient = System.currentTimeMillis();
 
                     pool.submit(initTask(getRequest(), taskData));
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch(IOException | InterruptedException e) {
+                System.out.println("Server: input thread exception: " + e.getMessage());
             } finally {
-                close();
+                doneSignal.countDown();
             }
        };
     }
 
-    private void close() {
-        try {
-            socket.close();
-            outputExecutor.shutdown();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void close() throws IOException {
+        super.close();
+        outputPool.shutdown();
     }
 
     private Runnable initTask(Request request, TaskData taskData) {
         return () -> {
             Response response = processRequest(request, taskData);
-            outputExecutor.submit(initOutputExecutor(response, taskData));
+            outputPool.submit(initOutputPool(response, taskData));
         };
     }
 
-    private Runnable initOutputExecutor(Response response, TaskData taskData) {
+    private Runnable initOutputPool(Response response, TaskData taskData) {
         return () -> {
             try {
                 sendResponse(response, taskData);
             } catch(IOException e) {
-                e.printStackTrace();
+                System.out.println("Server: output thread exception: " + e.getMessage());
             } finally {
-                close();
+                doneSignal.countDown();
             }
         };
-    }
-
-    private Request getRequest() throws IOException {
-        byte[] protoBuf = Lib.receive(input);
-        Request request = Request.parseFrom(protoBuf);
-
-        assert request != null;
-        return request;
-    }
-
-    private Response processRequest(Request request, TaskData taskData) {
-        taskData.startTask = System.currentTimeMillis();
-        List<Integer> sortedList = Constants.SORT.apply(request.getElemList());
-        taskData.taskTime = System.currentTimeMillis() - taskData.startTask;
-
-        return Response.newBuilder()
-                .setSize(request.getSize())
-                .addAllElem(sortedList)
-                .build();
-    }
-
-    private void sendResponse(Response response, TaskData taskData) throws IOException {
-        int packageSize = response.getSerializedSize();
-        output.write(ByteBuffer.allocate(Constants.INT_SIZE).putInt(packageSize).array());
-        response.writeTo(output);
-
-        taskData.clientTime = System.currentTimeMillis() - taskData.startClient;
     }
 }

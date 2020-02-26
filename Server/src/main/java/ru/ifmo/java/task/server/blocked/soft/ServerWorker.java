@@ -5,6 +5,7 @@ import ru.ifmo.java.task.Lib;
 import ru.ifmo.java.task.protocol.Protocol.*;
 import ru.ifmo.java.task.server.ServerStat.*;
 import ru.ifmo.java.task.server.ServerStat.ClientStat.*;
+import ru.ifmo.java.task.server.blocked.AbstractBlockedServerWorker;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,26 +16,26 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
-public class ServerWorker implements Runnable {
+public class ServerWorker extends AbstractBlockedServerWorker implements Runnable {
     private final Socket socket;
     private final InputStream input;
     private final OutputStream output;
 
     private final ClientStat clientStat;
 
-    private final CountDownLatch start;
-    private final CountDownLatch finish;
+    private final CountDownLatch startSignal;
+    private final CountDownLatch doneSignal;
 
     public ServerWorker(Socket socket, ExecutorService pool, ClientStat clientStat,
-                        CountDownLatch start, CountDownLatch finish) throws IOException {
+                        CountDownLatch startSignal, CountDownLatch doneSignal) throws IOException {
         this.socket = socket;
         input = socket.getInputStream();
         output = socket.getOutputStream();
 
         this.clientStat = clientStat;
 
-        this.start = start;
-        this.finish = finish;
+        this.startSignal = startSignal;
+        this.doneSignal = doneSignal;
 
         pool.submit(this);
     }
@@ -43,7 +44,7 @@ public class ServerWorker implements Runnable {
     public void run() {
         try {
             clientStat.startWaitFor = System.currentTimeMillis();
-            start.await();
+            startSignal.await();
             clientStat.waitForTime = System.currentTimeMillis() - clientStat.startWaitFor;
 
             for (int i = 0; i < clientStat.getTasksNum(); i++) {
@@ -55,38 +56,7 @@ public class ServerWorker implements Runnable {
         } catch(IOException | InterruptedException e) {
             System.out.println("Server: tasks exception: " + e.getMessage());
         } finally {
-            finish.countDown();
+            doneSignal.countDown();
         }
-    }
-
-    public void close() throws IOException {
-        socket.close();
-    }
-
-    private Request getRequest() throws IOException {
-        byte[] protoBuf = Lib.receive(input);
-        Request request = Request.parseFrom(protoBuf);
-
-        assert request != null;
-        return request;
-    }
-
-    private Response processRequest(Request request, TaskData taskData) {
-        taskData.startTask = System.currentTimeMillis();
-        List<Integer> sortedList = Constants.SORT.apply(request.getElemList());
-        taskData.taskTime = System.currentTimeMillis() - taskData.startTask;
-
-        return Response.newBuilder()
-                .setSize(request.getSize())
-                .addAllElem(sortedList)
-                .build();
-    }
-
-    private void sendResponse(Response response, TaskData taskData) throws IOException {
-        int packageSize = response.getSerializedSize();
-        output.write(ByteBuffer.allocate(Constants.INT_SIZE).putInt(packageSize).array());
-        response.writeTo(output);
-
-        taskData.clientTime = System.currentTimeMillis() - taskData.startClient;
     }
 }

@@ -1,10 +1,9 @@
 package ru.ifmo.java.task.server.blocked;
 
-import ru.ifmo.java.task.Constants;
 import ru.ifmo.java.task.server.AbstractServer;
 import ru.ifmo.java.task.server.ServerStat;
 import ru.ifmo.java.task.server.ServerStat.*;
-import ru.ifmo.java.task.server.blocked.soft.ServerWorker;
+import ru.ifmo.java.task.server.blocked.hard.ServerWorker;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -17,9 +16,9 @@ import java.util.concurrent.ExecutorService;
 abstract public class AbstractBlockedServer extends AbstractServer {
     public ExecutorService pool;
     public final CountDownLatch startSignal = new CountDownLatch(1);
-    public final CountDownLatch finishSignal = new CountDownLatch(1);
+    public final CountDownLatch doneSignal = new CountDownLatch(1);
 
-    private final List<ServerWorker> serverWorkerList = new ArrayList<>();
+    private final List<AbstractBlockedServerWorker> serverWorkerList = new ArrayList<>();
 
     public AbstractBlockedServer(ServerStat serverStat) {
         super(serverStat);
@@ -27,7 +26,7 @@ abstract public class AbstractBlockedServer extends AbstractServer {
 
     abstract public ExecutorService initPool();
     abstract public int initServerPort();
-    abstract public ServerWorker initServerWorker(Socket socket, ClientStat clientStat) throws IOException;
+    abstract public AbstractBlockedServerWorker initServerWorker(Socket socket, ClientStat clientStat) throws IOException;
 
     @Override
     public void run() throws IOException, InterruptedException {
@@ -37,7 +36,7 @@ abstract public class AbstractBlockedServer extends AbstractServer {
         for (int i = 0; i < serverStat.getClientsNum(); i++) {
             Socket socket = serverSocket.accept();
 
-            ServerWorker serverWorker = initServerWorker(socket, serverStat.registerClient());
+            AbstractBlockedServerWorker serverWorker = initServerWorker(socket, serverStat.registerClient());
             serverWorkerList.add(serverWorker);
         }
         startSignal.countDown();
@@ -45,10 +44,10 @@ abstract public class AbstractBlockedServer extends AbstractServer {
         pool.shutdown();
         serverSocket.close();
 
-        finishSignal.await();
+        doneSignal.await();
         serverStat.save();
 
-        for (final ServerWorker serverWorker : serverWorkerList) {
+        for (final AbstractBlockedServerWorker serverWorker : serverWorkerList) {
             serverWorker.close();
         }
     }

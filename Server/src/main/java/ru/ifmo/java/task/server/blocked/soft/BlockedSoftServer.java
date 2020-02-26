@@ -30,6 +30,6 @@ public class BlockedSoftServer extends AbstractBlockedServer {
 
     @Override
     public ServerWorker initServerWorker(Socket socket, ClientStat clientStat) throws IOException {
-        return new ServerWorker(socket, pool, clientStat, startSignal, finishSignal);
+        return new ServerWorker(socket, pool, clientStat, startSignal, doneSignal);
     }
 }
