@@ -102,7 +102,7 @@ public class UnblockedServer extends AbstractServer {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("Input Selector: " + e.getMessage());
+//                System.out.println("Input Selector: " + e.getMessage());
                 doneSignal.countDown();
             }
         };
@@ -139,7 +139,7 @@ public class UnblockedServer extends AbstractServer {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("Output Selector: " + e.getMessage());
+//                System.out.println("Output Selector: " + e.getMessage());
                 doneSignal.countDown();
             }
         };
