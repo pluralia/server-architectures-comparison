@@ -1378,6 +1378,708 @@ public final class Protocol {
 
   }
 
+  public interface ServerConfigOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:ru.ifmo.java.task.protocol.ServerConfig)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string archType = 1;</code>
+     * @return The archType.
+     */
+    java.lang.String getArchType();
+    /**
+     * <code>string archType = 1;</code>
+     * @return The bytes for archType.
+     */
+    com.google.protobuf.ByteString
+        getArchTypeBytes();
+
+    /**
+     * <code>int32 clientNum = 2;</code>
+     * @return The clientNum.
+     */
+    int getClientNum();
+
+    /**
+     * <code>int32 taskNum = 3;</code>
+     * @return The taskNum.
+     */
+    int getTaskNum();
+  }
+  /**
+   * Protobuf type {@code ru.ifmo.java.task.protocol.ServerConfig}
+   */
+  public  static final class ServerConfig extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:ru.ifmo.java.task.protocol.ServerConfig)
+      ServerConfigOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ServerConfig.newBuilder() to construct.
+    private ServerConfig(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ServerConfig() {
+      archType_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ServerConfig();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ServerConfig(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              archType_ = s;
+              break;
+            }
+            case 16: {
+
+              clientNum_ = input.readInt32();
+              break;
+            }
+            case 24: {
+
+              taskNum_ = input.readInt32();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_ServerConfig_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_ServerConfig_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ru.ifmo.java.task.protocol.Protocol.ServerConfig.class, ru.ifmo.java.task.protocol.Protocol.ServerConfig.Builder.class);
+    }
+
+    public static final int ARCHTYPE_FIELD_NUMBER = 1;
+    private volatile java.lang.Object archType_;
+    /**
+     * <code>string archType = 1;</code>
+     * @return The archType.
+     */
+    public java.lang.String getArchType() {
+      java.lang.Object ref = archType_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        archType_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string archType = 1;</code>
+     * @return The bytes for archType.
+     */
+    public com.google.protobuf.ByteString
+        getArchTypeBytes() {
+      java.lang.Object ref = archType_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        archType_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int CLIENTNUM_FIELD_NUMBER = 2;
+    private int clientNum_;
+    /**
+     * <code>int32 clientNum = 2;</code>
+     * @return The clientNum.
+     */
+    public int getClientNum() {
+      return clientNum_;
+    }
+
+    public static final int TASKNUM_FIELD_NUMBER = 3;
+    private int taskNum_;
+    /**
+     * <code>int32 taskNum = 3;</code>
+     * @return The taskNum.
+     */
+    public int getTaskNum() {
+      return taskNum_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getArchTypeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, archType_);
+      }
+      if (clientNum_ != 0) {
+        output.writeInt32(2, clientNum_);
+      }
+      if (taskNum_ != 0) {
+        output.writeInt32(3, taskNum_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getArchTypeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, archType_);
+      }
+      if (clientNum_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, clientNum_);
+      }
+      if (taskNum_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, taskNum_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof ru.ifmo.java.task.protocol.Protocol.ServerConfig)) {
+        return super.equals(obj);
+      }
+      ru.ifmo.java.task.protocol.Protocol.ServerConfig other = (ru.ifmo.java.task.protocol.Protocol.ServerConfig) obj;
+
+      if (!getArchType()
+          .equals(other.getArchType())) return false;
+      if (getClientNum()
+          != other.getClientNum()) return false;
+      if (getTaskNum()
+          != other.getTaskNum()) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ARCHTYPE_FIELD_NUMBER;
+      hash = (53 * hash) + getArchType().hashCode();
+      hash = (37 * hash) + CLIENTNUM_FIELD_NUMBER;
+      hash = (53 * hash) + getClientNum();
+      hash = (37 * hash) + TASKNUM_FIELD_NUMBER;
+      hash = (53 * hash) + getTaskNum();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static ru.ifmo.java.task.protocol.Protocol.ServerConfig parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerConfig parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerConfig parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerConfig parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerConfig parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerConfig parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerConfig parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerConfig parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerConfig parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerConfig parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerConfig parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerConfig parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ru.ifmo.java.task.protocol.Protocol.ServerConfig prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code ru.ifmo.java.task.protocol.ServerConfig}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:ru.ifmo.java.task.protocol.ServerConfig)
+        ru.ifmo.java.task.protocol.Protocol.ServerConfigOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_ServerConfig_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_ServerConfig_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ru.ifmo.java.task.protocol.Protocol.ServerConfig.class, ru.ifmo.java.task.protocol.Protocol.ServerConfig.Builder.class);
+      }
+
+      // Construct using ru.ifmo.java.task.protocol.Protocol.ServerConfig.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        archType_ = "";
+
+        clientNum_ = 0;
+
+        taskNum_ = 0;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_ServerConfig_descriptor;
+      }
+
+      @java.lang.Override
+      public ru.ifmo.java.task.protocol.Protocol.ServerConfig getDefaultInstanceForType() {
+        return ru.ifmo.java.task.protocol.Protocol.ServerConfig.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public ru.ifmo.java.task.protocol.Protocol.ServerConfig build() {
+        ru.ifmo.java.task.protocol.Protocol.ServerConfig result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public ru.ifmo.java.task.protocol.Protocol.ServerConfig buildPartial() {
+        ru.ifmo.java.task.protocol.Protocol.ServerConfig result = new ru.ifmo.java.task.protocol.Protocol.ServerConfig(this);
+        result.archType_ = archType_;
+        result.clientNum_ = clientNum_;
+        result.taskNum_ = taskNum_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ru.ifmo.java.task.protocol.Protocol.ServerConfig) {
+          return mergeFrom((ru.ifmo.java.task.protocol.Protocol.ServerConfig)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ru.ifmo.java.task.protocol.Protocol.ServerConfig other) {
+        if (other == ru.ifmo.java.task.protocol.Protocol.ServerConfig.getDefaultInstance()) return this;
+        if (!other.getArchType().isEmpty()) {
+          archType_ = other.archType_;
+          onChanged();
+        }
+        if (other.getClientNum() != 0) {
+          setClientNum(other.getClientNum());
+        }
+        if (other.getTaskNum() != 0) {
+          setTaskNum(other.getTaskNum());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ru.ifmo.java.task.protocol.Protocol.ServerConfig parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ru.ifmo.java.task.protocol.Protocol.ServerConfig) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object archType_ = "";
+      /**
+       * <code>string archType = 1;</code>
+       * @return The archType.
+       */
+      public java.lang.String getArchType() {
+        java.lang.Object ref = archType_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          archType_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string archType = 1;</code>
+       * @return The bytes for archType.
+       */
+      public com.google.protobuf.ByteString
+          getArchTypeBytes() {
+        java.lang.Object ref = archType_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          archType_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string archType = 1;</code>
+       * @param value The archType to set.
+       * @return This builder for chaining.
+       */
+      public Builder setArchType(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        archType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string archType = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearArchType() {
+        
+        archType_ = getDefaultInstance().getArchType();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string archType = 1;</code>
+       * @param value The bytes for archType to set.
+       * @return This builder for chaining.
+       */
+      public Builder setArchTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        archType_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int clientNum_ ;
+      /**
+       * <code>int32 clientNum = 2;</code>
+       * @return The clientNum.
+       */
+      public int getClientNum() {
+        return clientNum_;
+      }
+      /**
+       * <code>int32 clientNum = 2;</code>
+       * @param value The clientNum to set.
+       * @return This builder for chaining.
+       */
+      public Builder setClientNum(int value) {
+        
+        clientNum_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 clientNum = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearClientNum() {
+        
+        clientNum_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int taskNum_ ;
+      /**
+       * <code>int32 taskNum = 3;</code>
+       * @return The taskNum.
+       */
+      public int getTaskNum() {
+        return taskNum_;
+      }
+      /**
+       * <code>int32 taskNum = 3;</code>
+       * @param value The taskNum to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTaskNum(int value) {
+        
+        taskNum_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 taskNum = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTaskNum() {
+        
+        taskNum_ = 0;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:ru.ifmo.java.task.protocol.ServerConfig)
+    }
+
+    // @@protoc_insertion_point(class_scope:ru.ifmo.java.task.protocol.ServerConfig)
+    private static final ru.ifmo.java.task.protocol.Protocol.ServerConfig DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ru.ifmo.java.task.protocol.Protocol.ServerConfig();
+    }
+
+    public static ru.ifmo.java.task.protocol.Protocol.ServerConfig getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ServerConfig>
+        PARSER = new com.google.protobuf.AbstractParser<ServerConfig>() {
+      @java.lang.Override
+      public ServerConfig parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ServerConfig(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ServerConfig> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ServerConfig> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public ru.ifmo.java.task.protocol.Protocol.ServerConfig getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface ServerDataOrBuilder extends
       // @@protoc_insertion_point(interface_extends:ru.ifmo.java.task.protocol.ServerData)
       com.google.protobuf.MessageOrBuilder {
@@ -3590,6 +4292,11 @@ public final class Protocol {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_ru_ifmo_java_task_protocol_Response_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ru_ifmo_java_task_protocol_ServerConfig_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ru_ifmo_java_task_protocol_ServerConfig_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_ru_ifmo_java_task_protocol_ServerData_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -3616,12 +4323,14 @@ public final class Protocol {
       "\n\016protocol.proto\022\032ru.ifmo.java.task.prot" +
       "ocol\"%\n\007Request\022\014\n\004size\030\001 \001(\005\022\014\n\004elem\030\002 " +
       "\003(\005\"&\n\010Response\022\014\n\004size\030\001 \001(\005\022\014\n\004elem\030\002 " +
-      "\003(\005\"H\n\nServerData\022:\n\nclientData\030\001 \003(\0132&." +
-      "ru.ifmo.java.task.protocol.ClientData\"_\n" +
-      "\nClientData\022\023\n\013waitForTime\030\001 \001(\003\022<\n\013requ" +
-      "estData\030\002 \003(\0132\'.ru.ifmo.java.task.protoc" +
-      "ol.RequestData\"3\n\013RequestData\022\020\n\010taskTim" +
-      "e\030\001 \001(\003\022\022\n\nclientTime\030\002 \001(\003b\006proto3"
+      "\003(\005\"D\n\014ServerConfig\022\020\n\010archType\030\001 \001(\t\022\021\n" +
+      "\tclientNum\030\002 \001(\005\022\017\n\007taskNum\030\003 \001(\005\"H\n\nSer" +
+      "verData\022:\n\nclientData\030\001 \003(\0132&.ru.ifmo.ja" +
+      "va.task.protocol.ClientData\"_\n\nClientDat" +
+      "a\022\023\n\013waitForTime\030\001 \001(\003\022<\n\013requestData\030\002 " +
+      "\003(\0132\'.ru.ifmo.java.task.protocol.Request" +
+      "Data\"3\n\013RequestData\022\020\n\010taskTime\030\001 \001(\003\022\022\n" +
+      "\nclientTime\030\002 \001(\003b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -3639,20 +4348,26 @@ public final class Protocol {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ru_ifmo_java_task_protocol_Response_descriptor,
         new java.lang.String[] { "Size", "Elem", });
-    internal_static_ru_ifmo_java_task_protocol_ServerData_descriptor =
+    internal_static_ru_ifmo_java_task_protocol_ServerConfig_descriptor =
       getDescriptor().getMessageTypes().get(2);
+    internal_static_ru_ifmo_java_task_protocol_ServerConfig_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ru_ifmo_java_task_protocol_ServerConfig_descriptor,
+        new java.lang.String[] { "ArchType", "ClientNum", "TaskNum", });
+    internal_static_ru_ifmo_java_task_protocol_ServerData_descriptor =
+      getDescriptor().getMessageTypes().get(3);
     internal_static_ru_ifmo_java_task_protocol_ServerData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ru_ifmo_java_task_protocol_ServerData_descriptor,
         new java.lang.String[] { "ClientData", });
     internal_static_ru_ifmo_java_task_protocol_ClientData_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_ru_ifmo_java_task_protocol_ClientData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ru_ifmo_java_task_protocol_ClientData_descriptor,
         new java.lang.String[] { "WaitForTime", "RequestData", });
     internal_static_ru_ifmo_java_task_protocol_RequestData_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_ru_ifmo_java_task_protocol_RequestData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ru_ifmo_java_task_protocol_RequestData_descriptor,

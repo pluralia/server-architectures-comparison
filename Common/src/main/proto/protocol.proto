@@ -13,6 +13,12 @@ message Response {
 }
 
 
+message ServerConfig {
+    string archType = 1;
+    int32 clientNum = 2;
+    int32 taskNum = 3;
+}
+
 message ServerData {
   repeated ClientData clientData = 1;
 }

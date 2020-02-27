@@ -32,7 +32,7 @@ public class UnblockedServer extends AbstractServer {
         ExecutorService pool = Executors.newFixedThreadPool(Constants.NCORES);
 
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.bind(new InetSocketAddress(Constants.LOCALHOST, Constants.UNBLOCKED_PORT));
+        serverSocketChannel.bind(new InetSocketAddress(Constants.UNBLOCKED_PORT));
 
         inputSelector = Selector.open();
         outputSelector = Selector.open();

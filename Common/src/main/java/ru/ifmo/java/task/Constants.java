@@ -18,9 +18,10 @@ public class Constants {
         }
     };
 
-    public static final int INT_SIZE = 4;
-
     public static final String LOCALHOST = "localhost";
+    public static final String OUTPUT_TXT = "output.txt";
+
+    public static final int INT_SIZE = 4;
 
     public static final int BLOCKED_SOFT_PORT = 1234;
 
@@ -29,7 +30,7 @@ public class Constants {
 
     public static final int UNBLOCKED_PORT = 1236;
 
-    public static final int COMMON_PORT = 1237;
+    public static final int COMMON_PORT = 1238;
 
     public static final Function<List<Integer>, List<Integer>> SORT = Sort::bubbleSort;
 

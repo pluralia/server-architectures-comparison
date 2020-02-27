@@ -8,6 +8,7 @@ import ru.ifmo.java.task.protocol.Protocol.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -33,7 +34,9 @@ public class Client implements Runnable {
         this.sleepTime = sleepTime;
         this.stat = stat;
 
-        socket = new Socket(Constants.LOCALHOST, port);
+        InetAddress inetAddress = InetAddress.getByAddress(new byte[]{(byte)192, (byte)168, 1, 15});
+        socket = new Socket(inetAddress, port);
+//        socket = new Socket(Constants.LOCALHOST, port);
         input = socket.getInputStream();
         output = socket.getOutputStream();
     }

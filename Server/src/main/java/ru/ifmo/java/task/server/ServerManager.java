@@ -1,6 +1,7 @@
 package ru.ifmo.java.task.server;
 
 import ru.ifmo.java.task.Constants;
+import ru.ifmo.java.task.protocol.Protocol;
 import ru.ifmo.java.task.server.blocked.hard.BlockedHardServer;
 import ru.ifmo.java.task.server.blocked.soft.BlockedSoftServer;
 import ru.ifmo.java.task.server.unblocked.UnblockedServer;
@@ -13,13 +14,23 @@ public class ServerManager {
     private AbstractServer server;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        new ServerManager().run(Constants.BLOCKED_SOFT, 10, 8);
+        for (int i = 0; i < 7; i++) {
+            new ServerManager().run();
+        }
     }
 
-    public void run(String architectureType, int clientNum, int tasksNum) throws IOException, InterruptedException {
-        ServerStat serverStat = new ServerStat(clientNum, tasksNum);
+    public void run() throws IOException, InterruptedException {
+        ServerSocket serverSocket = new ServerSocket(Constants.COMMON_PORT);
+        Socket socket = serverSocket.accept();
 
-        switch (architectureType) {
+        Protocol.ServerConfig serverConfig =
+                Protocol.ServerConfig.parseDelimitedFrom(socket.getInputStream());
+
+        System.out.println("CONGIF --> SERVER");
+
+        ServerStat serverStat = new ServerStat(serverConfig.getClientNum(), serverConfig.getTaskNum());
+
+        switch (serverConfig.getArchType()) {
             case Constants.BLOCKED_SOFT:
                 server = new BlockedSoftServer(serverStat);
                 break;
@@ -35,14 +46,10 @@ public class ServerManager {
 
         System.out.println("SERVER --> STAT");
 
-        ServerSocket serverSocket = new ServerSocket(Constants.COMMON_PORT);
-        Socket socket = serverSocket.accept();
-
         serverStat.getStat().writeDelimitedTo(socket.getOutputStream());
 
         socket.close();
         serverSocket.close();
-
     }
 }
 
