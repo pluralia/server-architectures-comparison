@@ -35,7 +35,6 @@ public class ServerWorker extends AbstractBlockedServerWorker {
     private Runnable initInputThread() {
         return () -> {
             try {
-                clientStat.startWaitFor = System.currentTimeMillis();
                 startSignal.await();
                 clientStat.waitForTime = System.currentTimeMillis() - clientStat.startWaitFor;
 

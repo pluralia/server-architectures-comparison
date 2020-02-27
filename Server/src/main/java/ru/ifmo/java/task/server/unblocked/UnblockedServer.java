@@ -2,6 +2,7 @@ package ru.ifmo.java.task.server.unblocked;
 
 import ru.ifmo.java.task.Constants;
 import ru.ifmo.java.task.server.ServerStat;
+import ru.ifmo.java.task.server.ServerStat.*;
 import ru.ifmo.java.task.server.AbstractServer;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.nio.channels.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,64 +19,62 @@ public class UnblockedServer extends AbstractServer {
     private Selector inputSelector;
     private Selector outputSelector;
 
-    private ExecutorService pool;
-    private ServerSocketChannel serverSocketChannel;
+    private final CountDownLatch doneSignal = new CountDownLatch(1);
 
-    private List<ServerWorker> serverWorkers = new ArrayList<>();
+    private final List<ServerWorker> serverWorkerList = new ArrayList<>();
 
     public UnblockedServer(ServerStat serverStat) {
         super(serverStat);
     }
 
     @Override
-    public void run() throws IOException {
-        pool = Executors.newFixedThreadPool(Constants.NCORES);
+    public void run() throws IOException, InterruptedException {
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.NCORES);
 
-        serverSocketChannel = ServerSocketChannel.open();
+        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.bind(new InetSocketAddress(Constants.LOCALHOST, Constants.UNBLOCKED_PORT));
+
+        inputSelector = Selector.open();
+        outputSelector = Selector.open();
 
         for (int i = 0; i < serverStat.getClientsNum(); i++) {
             SocketChannel socketChannel = serverSocketChannel.accept();
             socketChannel.configureBlocking(false);
 
-            serverWorkers.add(new ServerWorker(this, socketChannel, serverStat.registerClient(),
-                    pool, outputSelector));
+            serverWorkerList.add(new ServerWorker(socketChannel, pool,
+                    serverStat.registerClient(), doneSignal, outputSelector));
         }
 
-        inputSelector = Selector.open();
         Thread inputSelectorThread = new Thread(initInputSelectorThread());
         inputSelectorThread.setDaemon(true);
         inputSelectorThread.start();
 
-        outputSelector = Selector.open();
         Thread outputSelectorThread = new Thread(initOutputSelectorThread());
         outputSelectorThread.setDaemon(true);
         outputSelectorThread.start();
-    }
 
-    @Override
-    public void stop() {
-        try {
-            serverStat.save();
+        doneSignal.await();
 
-            inputSelector.close();
-            outputSelector.close();
-
-            serverSocketChannel.close();
-
-            pool.shutdown();
-        } catch (IOException e) {
-            e.printStackTrace();
+        pool.shutdownNow();
+        for (final ServerWorker serverWorker : serverWorkerList) {
+            serverWorker.close();
         }
+
+        serverSocketChannel.close();
+
+        inputSelector.close();
+        outputSelector.close();
+
+        serverStat.save();
     }
 
     private Runnable initInputSelectorThread() {
-        for (ServerWorker serverWorker : serverWorkers) {
+        for (ServerWorker serverWorker : serverWorkerList) {
             SocketChannel socketChannel = serverWorker.getSocketChannel();
             try {
                 socketChannel.register(inputSelector, SelectionKey.OP_READ, serverWorker);
             } catch (ClosedChannelException e) {
-                stop();
+                doneSignal.countDown();
             }
         }
 
@@ -89,18 +89,23 @@ public class UnblockedServer extends AbstractServer {
 
                         if (selectionKey.isReadable()) {
                             ServerWorker serverWorker = (ServerWorker) selectionKey.attachment();
-
                             assert serverWorker != null;
+
+                            ClientStat clientStat = serverWorker.getClientStat();
+                            if (clientStat.waitForTime == 0) {
+                                clientStat.waitForTime =
+                                        System.currentTimeMillis() - clientStat.startWaitFor;
+                            }
+
                             serverWorker.getRequestAndHandle();
                         }
 
                         keyIterator.remove();
                     }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                stop();
+            } catch (Exception e) {
+                System.out.println("Input Selector: " + e.getMessage());
+                doneSignal.countDown();
             }
         };
     }
@@ -126,7 +131,7 @@ public class UnblockedServer extends AbstractServer {
                         selectionKey.cancel();
                     }
 
-                    for (ServerWorker serverWorker : serverWorkers) {
+                    for (ServerWorker serverWorker : serverWorkerList) {
                         if (serverWorker.isBufferQueueNotEmpty()) {
                             SocketChannel socketChannel = serverWorker.getSocketChannel();
                             if (socketChannel.keyFor(outputSelector) == null) {
@@ -135,10 +140,9 @@ public class UnblockedServer extends AbstractServer {
                         }
                     }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                stop();
+            } catch (Exception e) {
+                System.out.println("Output Selector: " + e.getMessage());
+                doneSignal.countDown();
             }
         };
     }

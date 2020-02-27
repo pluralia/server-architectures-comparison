@@ -44,6 +44,7 @@ public class Client implements Runnable {
             for (int i = 0; i < taskNum; i++) {
                 long start = System.currentTimeMillis();
                 sendRequest(generateArray());
+
                 if (receiveResponse()) {
                     stat.addAndGet(System.currentTimeMillis() - start);
                 }

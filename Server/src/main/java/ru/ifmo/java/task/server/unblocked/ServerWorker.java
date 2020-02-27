@@ -12,15 +12,14 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
 public class ServerWorker {
-    private final UnblockedServer unblockedServer;
-
     private final SocketChannel socketChannel;
-    private final ClientStat clientStat;
-
     private final ExecutorService pool;
+    private final ClientStat clientStat;
+    private final CountDownLatch doneSignal;
     private final Selector outputSelector;
 
     private int size;
@@ -34,14 +33,19 @@ public class ServerWorker {
     private ByteBuffer body;
     private ConcurrentLinkedQueue<TaskData> bufferQueue = new ConcurrentLinkedQueue<>();
 
-    public ServerWorker(UnblockedServer unblockedServer, SocketChannel socketChannel, ClientStat clientStat,
-                        ExecutorService pool, Selector outputSelector) {
-        this.unblockedServer = unblockedServer;
+    private int taskCounter;
+
+    public ServerWorker(SocketChannel socketChannel, ExecutorService pool, ClientStat clientStat,
+                        CountDownLatch doneSignal, Selector outputSelector) {
+        clientStat.startWaitFor = System.currentTimeMillis();
 
         this.socketChannel = socketChannel;
+
         this.clientStat = clientStat;
+        taskCounter = clientStat.getTasksNum();
 
         this.pool = pool;
+        this.doneSignal = doneSignal;
         this.outputSelector = outputSelector;
     }
 
@@ -49,24 +53,31 @@ public class ServerWorker {
         return socketChannel;
     }
 
-    public void close() {
-        try {
-            socketChannel.close();
-            unblockedServer.stop();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public ClientStat getClientStat() {
+        return clientStat;
+    }
+
+    public void close() throws IOException {
+        socketChannel.close();
     }
 
     public void getRequestAndHandle() throws IOException {
         if (isFirst) {
             currTaskData = clientStat.registerRequest();
-            currTaskData.startClient = System.currentTimeMillis();
             isFirst = false;
         }
 
         if (isSizeReading) {
-            numOfBytes += socketChannel.read(head);
+            long num;
+            do {
+                num = socketChannel.read(head);
+            } while (num == 0);
+
+            currTaskData.startClient = System.currentTimeMillis();
+
+            numOfBytes += num;
+            socketChannel.read(head);
+
             if (numOfBytes == Constants.INT_SIZE) {
                 head.flip();
                 size = head.getInt();
@@ -119,10 +130,11 @@ public class ServerWorker {
 
             taskData.byteBuffer = result;
             bufferQueue.add(taskData);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            close();
+
+            outputSelector.wakeup();
+        } catch (Exception e) {
+            System.out.println("ServerWorker: putOnQueue: " + e.getMessage());
+            doneSignal.countDown();
         }
     }
 
@@ -139,8 +151,6 @@ public class ServerWorker {
         ByteBuffer sizeBB = ByteBuffer.allocate(Constants.INT_SIZE).putInt(result.remaining());
         sizeBB.flip();
 
-        outputSelector.wakeup();
-
         while (sizeBB.hasRemaining()) {
             socketChannel.write(sizeBB);
         }
@@ -150,6 +160,11 @@ public class ServerWorker {
         }
 
         taskData.clientTime = System.currentTimeMillis() - taskData.startClient;
+
+        taskCounter -= 1;
+        if (taskCounter == 0) {
+            doneSignal.countDown();
+        }
     }
 
     private Response processRequest(Request request, TaskData taskData) {

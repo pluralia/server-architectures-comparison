@@ -50,7 +50,4 @@ abstract public class AbstractBlockedServer extends AbstractServer {
 
         serverStat.save();
     }
-
-    @Override
-    public void stop() {    }
 }

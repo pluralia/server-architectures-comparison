@@ -14,7 +14,7 @@ public class ClientManager {
     private ClientStat clientStat = new ClientStat();
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        new ClientManager().run(Constants.BLOCKED_SOFT_PORT, 10, 4, 10000, 1000);
+        new ClientManager().run(Constants.BLOCKED_HARD_PORT, 10, 8, 10000, 0);
     }
 
     public void run(int port, int clientsNum, int taskNum, int taskSize, int sleepTime) throws InterruptedException, IOException {

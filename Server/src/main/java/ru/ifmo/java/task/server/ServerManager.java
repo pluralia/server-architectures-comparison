@@ -10,11 +10,11 @@ import java.io.IOException;
 public class ServerManager {
     private AbstractServer server;
 
-    public static void main(String[] args) throws IOException {
-        new ServerManager().run(Constants.BLOCKED_SOFT, 10, 4);
+    public static void main(String[] args) throws IOException, InterruptedException {
+        new ServerManager().run(Constants.BLOCKED_HARD, 10, 8);
     }
 
-    public void run(String architectureType, int clientNum, int tasksNum) throws IOException {
+    public void run(String architectureType, int clientNum, int tasksNum) throws IOException, InterruptedException {
         ServerStat serverStat = new ServerStat(clientNum, tasksNum);
 
         switch (architectureType) {
@@ -29,12 +29,7 @@ public class ServerManager {
                 break;
         }
 
-        try {
-            server.run();
-        } catch(IOException | InterruptedException ignore) {
-            System.out.println("SERVER MANAGER");
-            ignore.printStackTrace();
-        }
+        server.run();
     }
 }
 

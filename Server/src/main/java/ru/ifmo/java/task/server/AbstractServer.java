@@ -10,6 +10,4 @@ public abstract class AbstractServer {
     }
 
     public abstract void run() throws IOException, InterruptedException;
-
-    public abstract void stop() throws IOException, InterruptedException;
 }
