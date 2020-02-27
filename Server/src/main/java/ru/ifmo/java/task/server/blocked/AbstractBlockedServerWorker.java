@@ -5,7 +5,7 @@ import ru.ifmo.java.task.Lib;
 import ru.ifmo.java.task.protocol.Protocol.Request;
 import ru.ifmo.java.task.protocol.Protocol.Response;
 import ru.ifmo.java.task.server.ServerStat.ClientStat;
-import ru.ifmo.java.task.server.ServerStat.ClientStat.TaskData;
+import ru.ifmo.java.task.server.ServerStat.ClientStat.RequestStat;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,9 +43,9 @@ public class AbstractBlockedServerWorker {
         socket.close();
     }
 
-    public Request getRequest(TaskData taskData) throws IOException {
+    public Request getRequest(RequestStat requestStat) throws IOException {
         while (input.available() == 0) {}
-        taskData.startClient = System.currentTimeMillis();
+        requestStat.startClient = System.currentTimeMillis();
 
         byte[] protoBuf = Lib.receive(input);
         Request request = Request.parseFrom(protoBuf);
@@ -54,10 +54,10 @@ public class AbstractBlockedServerWorker {
         return request;
     }
 
-    public Response processRequest(Request request, TaskData taskData) {
-        taskData.startTask = System.currentTimeMillis();
+    public Response processRequest(Request request, RequestStat requestStat) {
+        requestStat.startTask = System.currentTimeMillis();
         List<Integer> sortedList = Constants.SORT.apply(request.getElemList());
-        taskData.taskTime = System.currentTimeMillis() - taskData.startTask;
+        requestStat.taskTime = System.currentTimeMillis() - requestStat.startTask;
 
         return Response.newBuilder()
                 .setSize(request.getSize())
@@ -65,11 +65,11 @@ public class AbstractBlockedServerWorker {
                 .build();
     }
 
-    public void sendResponse(Response response, TaskData taskData) throws IOException {
+    public void sendResponse(Response response, RequestStat requestStat) throws IOException {
         int packageSize = response.getSerializedSize();
         output.write(ByteBuffer.allocate(Constants.INT_SIZE).putInt(packageSize).array());
         response.writeTo(output);
 
-        taskData.clientTime = System.currentTimeMillis() - taskData.startClient;
+        requestStat.clientTime = System.currentTimeMillis() - requestStat.startClient;
     }
 }

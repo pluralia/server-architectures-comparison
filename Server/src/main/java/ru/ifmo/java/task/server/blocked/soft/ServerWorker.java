@@ -30,11 +30,11 @@ public class ServerWorker extends AbstractBlockedServerWorker implements Runnabl
             clientStat.waitForTime = System.currentTimeMillis() - clientStat.startWaitFor;
 
             for (int i = 0; i < clientStat.getTasksNum(); i++) {
-                TaskData taskData = clientStat.registerRequest();
+                RequestStat requestStat = clientStat.registerRequest();
 
-                Protocol.Request request = getRequest(taskData);
-                Protocol.Response response = processRequest(request, taskData);
-                sendResponse(response, taskData);
+                Protocol.Request request = getRequest(requestStat);
+                Protocol.Response response = processRequest(request, requestStat);
+                sendResponse(response, requestStat);
             }
         } catch(Exception e) {
 //            System.out.println("Server: tasks exception: " + e.getMessage());

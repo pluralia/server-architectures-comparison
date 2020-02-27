@@ -39,10 +39,10 @@ public class ServerWorker extends AbstractBlockedServerWorker {
                 clientStat.waitForTime = System.currentTimeMillis() - clientStat.startWaitFor;
 
                 for (int i = 0; i < clientStat.getTasksNum(); i++) {
-                    TaskData taskData = clientStat.registerRequest();
+                    RequestStat requestStat = clientStat.registerRequest();
 
-                    Request request = getRequest(taskData);
-                    pool.submit(initTask(request, taskData));
+                    Request request = getRequest(requestStat);
+                    pool.submit(initTask(request, requestStat));
                 }
             } catch(Exception e) {
 //                System.out.println("Server: input thread exception: " + e.getMessage());
@@ -57,17 +57,17 @@ public class ServerWorker extends AbstractBlockedServerWorker {
         outputPool.shutdown();
     }
 
-    private Runnable initTask(Request request, TaskData taskData) {
+    private Runnable initTask(Request request, RequestStat requestStat) {
         return () -> {
-            Response response = processRequest(request, taskData);
-            outputPool.submit(initOutputPool(response, taskData));
+            Response response = processRequest(request, requestStat);
+            outputPool.submit(initOutputPool(response, requestStat));
         };
     }
 
-    private Runnable initOutputPool(Response response, TaskData taskData) {
+    private Runnable initOutputPool(Response response, RequestStat requestStat) {
         return () -> {
             try {
-                sendResponse(response, taskData);
+                sendResponse(response, requestStat);
                 taskCounter -= 1;
 
                 if (taskCounter == 0) {

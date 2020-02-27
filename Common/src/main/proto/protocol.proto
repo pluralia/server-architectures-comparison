@@ -11,3 +11,18 @@ message Response {
     int32 size = 1;
     repeated int32 elem = 2;
 }
+
+
+message ServerData {
+  repeated ClientData clientData = 1;
+}
+
+message ClientData {
+    int64 waitForTime = 1;
+    repeated RequestData requestData = 2;
+}
+
+message RequestData {
+    int64 taskTime = 1;
+    int64 clientTime = 2;
+}

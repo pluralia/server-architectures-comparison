@@ -1378,6 +1378,2207 @@ public final class Protocol {
 
   }
 
+  public interface ServerDataOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:ru.ifmo.java.task.protocol.ServerData)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+     */
+    java.util.List<ru.ifmo.java.task.protocol.Protocol.ClientData> 
+        getClientDataList();
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+     */
+    ru.ifmo.java.task.protocol.Protocol.ClientData getClientData(int index);
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+     */
+    int getClientDataCount();
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+     */
+    java.util.List<? extends ru.ifmo.java.task.protocol.Protocol.ClientDataOrBuilder> 
+        getClientDataOrBuilderList();
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+     */
+    ru.ifmo.java.task.protocol.Protocol.ClientDataOrBuilder getClientDataOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code ru.ifmo.java.task.protocol.ServerData}
+   */
+  public  static final class ServerData extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:ru.ifmo.java.task.protocol.ServerData)
+      ServerDataOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ServerData.newBuilder() to construct.
+    private ServerData(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ServerData() {
+      clientData_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ServerData();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ServerData(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                clientData_ = new java.util.ArrayList<ru.ifmo.java.task.protocol.Protocol.ClientData>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              clientData_.add(
+                  input.readMessage(ru.ifmo.java.task.protocol.Protocol.ClientData.parser(), extensionRegistry));
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          clientData_ = java.util.Collections.unmodifiableList(clientData_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_ServerData_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_ServerData_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ru.ifmo.java.task.protocol.Protocol.ServerData.class, ru.ifmo.java.task.protocol.Protocol.ServerData.Builder.class);
+    }
+
+    public static final int CLIENTDATA_FIELD_NUMBER = 1;
+    private java.util.List<ru.ifmo.java.task.protocol.Protocol.ClientData> clientData_;
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+     */
+    public java.util.List<ru.ifmo.java.task.protocol.Protocol.ClientData> getClientDataList() {
+      return clientData_;
+    }
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+     */
+    public java.util.List<? extends ru.ifmo.java.task.protocol.Protocol.ClientDataOrBuilder> 
+        getClientDataOrBuilderList() {
+      return clientData_;
+    }
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+     */
+    public int getClientDataCount() {
+      return clientData_.size();
+    }
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+     */
+    public ru.ifmo.java.task.protocol.Protocol.ClientData getClientData(int index) {
+      return clientData_.get(index);
+    }
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+     */
+    public ru.ifmo.java.task.protocol.Protocol.ClientDataOrBuilder getClientDataOrBuilder(
+        int index) {
+      return clientData_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < clientData_.size(); i++) {
+        output.writeMessage(1, clientData_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < clientData_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, clientData_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof ru.ifmo.java.task.protocol.Protocol.ServerData)) {
+        return super.equals(obj);
+      }
+      ru.ifmo.java.task.protocol.Protocol.ServerData other = (ru.ifmo.java.task.protocol.Protocol.ServerData) obj;
+
+      if (!getClientDataList()
+          .equals(other.getClientDataList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getClientDataCount() > 0) {
+        hash = (37 * hash) + CLIENTDATA_FIELD_NUMBER;
+        hash = (53 * hash) + getClientDataList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static ru.ifmo.java.task.protocol.Protocol.ServerData parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerData parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerData parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerData parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerData parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerData parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerData parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerData parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerData parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerData parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerData parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ServerData parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ru.ifmo.java.task.protocol.Protocol.ServerData prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code ru.ifmo.java.task.protocol.ServerData}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:ru.ifmo.java.task.protocol.ServerData)
+        ru.ifmo.java.task.protocol.Protocol.ServerDataOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_ServerData_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_ServerData_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ru.ifmo.java.task.protocol.Protocol.ServerData.class, ru.ifmo.java.task.protocol.Protocol.ServerData.Builder.class);
+      }
+
+      // Construct using ru.ifmo.java.task.protocol.Protocol.ServerData.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getClientDataFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (clientDataBuilder_ == null) {
+          clientData_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          clientDataBuilder_.clear();
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_ServerData_descriptor;
+      }
+
+      @java.lang.Override
+      public ru.ifmo.java.task.protocol.Protocol.ServerData getDefaultInstanceForType() {
+        return ru.ifmo.java.task.protocol.Protocol.ServerData.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public ru.ifmo.java.task.protocol.Protocol.ServerData build() {
+        ru.ifmo.java.task.protocol.Protocol.ServerData result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public ru.ifmo.java.task.protocol.Protocol.ServerData buildPartial() {
+        ru.ifmo.java.task.protocol.Protocol.ServerData result = new ru.ifmo.java.task.protocol.Protocol.ServerData(this);
+        int from_bitField0_ = bitField0_;
+        if (clientDataBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            clientData_ = java.util.Collections.unmodifiableList(clientData_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.clientData_ = clientData_;
+        } else {
+          result.clientData_ = clientDataBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ru.ifmo.java.task.protocol.Protocol.ServerData) {
+          return mergeFrom((ru.ifmo.java.task.protocol.Protocol.ServerData)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ru.ifmo.java.task.protocol.Protocol.ServerData other) {
+        if (other == ru.ifmo.java.task.protocol.Protocol.ServerData.getDefaultInstance()) return this;
+        if (clientDataBuilder_ == null) {
+          if (!other.clientData_.isEmpty()) {
+            if (clientData_.isEmpty()) {
+              clientData_ = other.clientData_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureClientDataIsMutable();
+              clientData_.addAll(other.clientData_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.clientData_.isEmpty()) {
+            if (clientDataBuilder_.isEmpty()) {
+              clientDataBuilder_.dispose();
+              clientDataBuilder_ = null;
+              clientData_ = other.clientData_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              clientDataBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getClientDataFieldBuilder() : null;
+            } else {
+              clientDataBuilder_.addAllMessages(other.clientData_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ru.ifmo.java.task.protocol.Protocol.ServerData parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ru.ifmo.java.task.protocol.Protocol.ServerData) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<ru.ifmo.java.task.protocol.Protocol.ClientData> clientData_ =
+        java.util.Collections.emptyList();
+      private void ensureClientDataIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          clientData_ = new java.util.ArrayList<ru.ifmo.java.task.protocol.Protocol.ClientData>(clientData_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          ru.ifmo.java.task.protocol.Protocol.ClientData, ru.ifmo.java.task.protocol.Protocol.ClientData.Builder, ru.ifmo.java.task.protocol.Protocol.ClientDataOrBuilder> clientDataBuilder_;
+
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public java.util.List<ru.ifmo.java.task.protocol.Protocol.ClientData> getClientDataList() {
+        if (clientDataBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(clientData_);
+        } else {
+          return clientDataBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public int getClientDataCount() {
+        if (clientDataBuilder_ == null) {
+          return clientData_.size();
+        } else {
+          return clientDataBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public ru.ifmo.java.task.protocol.Protocol.ClientData getClientData(int index) {
+        if (clientDataBuilder_ == null) {
+          return clientData_.get(index);
+        } else {
+          return clientDataBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public Builder setClientData(
+          int index, ru.ifmo.java.task.protocol.Protocol.ClientData value) {
+        if (clientDataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureClientDataIsMutable();
+          clientData_.set(index, value);
+          onChanged();
+        } else {
+          clientDataBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public Builder setClientData(
+          int index, ru.ifmo.java.task.protocol.Protocol.ClientData.Builder builderForValue) {
+        if (clientDataBuilder_ == null) {
+          ensureClientDataIsMutable();
+          clientData_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          clientDataBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public Builder addClientData(ru.ifmo.java.task.protocol.Protocol.ClientData value) {
+        if (clientDataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureClientDataIsMutable();
+          clientData_.add(value);
+          onChanged();
+        } else {
+          clientDataBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public Builder addClientData(
+          int index, ru.ifmo.java.task.protocol.Protocol.ClientData value) {
+        if (clientDataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureClientDataIsMutable();
+          clientData_.add(index, value);
+          onChanged();
+        } else {
+          clientDataBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public Builder addClientData(
+          ru.ifmo.java.task.protocol.Protocol.ClientData.Builder builderForValue) {
+        if (clientDataBuilder_ == null) {
+          ensureClientDataIsMutable();
+          clientData_.add(builderForValue.build());
+          onChanged();
+        } else {
+          clientDataBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public Builder addClientData(
+          int index, ru.ifmo.java.task.protocol.Protocol.ClientData.Builder builderForValue) {
+        if (clientDataBuilder_ == null) {
+          ensureClientDataIsMutable();
+          clientData_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          clientDataBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public Builder addAllClientData(
+          java.lang.Iterable<? extends ru.ifmo.java.task.protocol.Protocol.ClientData> values) {
+        if (clientDataBuilder_ == null) {
+          ensureClientDataIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, clientData_);
+          onChanged();
+        } else {
+          clientDataBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public Builder clearClientData() {
+        if (clientDataBuilder_ == null) {
+          clientData_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          clientDataBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public Builder removeClientData(int index) {
+        if (clientDataBuilder_ == null) {
+          ensureClientDataIsMutable();
+          clientData_.remove(index);
+          onChanged();
+        } else {
+          clientDataBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public ru.ifmo.java.task.protocol.Protocol.ClientData.Builder getClientDataBuilder(
+          int index) {
+        return getClientDataFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public ru.ifmo.java.task.protocol.Protocol.ClientDataOrBuilder getClientDataOrBuilder(
+          int index) {
+        if (clientDataBuilder_ == null) {
+          return clientData_.get(index);  } else {
+          return clientDataBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public java.util.List<? extends ru.ifmo.java.task.protocol.Protocol.ClientDataOrBuilder> 
+           getClientDataOrBuilderList() {
+        if (clientDataBuilder_ != null) {
+          return clientDataBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(clientData_);
+        }
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public ru.ifmo.java.task.protocol.Protocol.ClientData.Builder addClientDataBuilder() {
+        return getClientDataFieldBuilder().addBuilder(
+            ru.ifmo.java.task.protocol.Protocol.ClientData.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public ru.ifmo.java.task.protocol.Protocol.ClientData.Builder addClientDataBuilder(
+          int index) {
+        return getClientDataFieldBuilder().addBuilder(
+            index, ru.ifmo.java.task.protocol.Protocol.ClientData.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.ClientData clientData = 1;</code>
+       */
+      public java.util.List<ru.ifmo.java.task.protocol.Protocol.ClientData.Builder> 
+           getClientDataBuilderList() {
+        return getClientDataFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          ru.ifmo.java.task.protocol.Protocol.ClientData, ru.ifmo.java.task.protocol.Protocol.ClientData.Builder, ru.ifmo.java.task.protocol.Protocol.ClientDataOrBuilder> 
+          getClientDataFieldBuilder() {
+        if (clientDataBuilder_ == null) {
+          clientDataBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              ru.ifmo.java.task.protocol.Protocol.ClientData, ru.ifmo.java.task.protocol.Protocol.ClientData.Builder, ru.ifmo.java.task.protocol.Protocol.ClientDataOrBuilder>(
+                  clientData_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          clientData_ = null;
+        }
+        return clientDataBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:ru.ifmo.java.task.protocol.ServerData)
+    }
+
+    // @@protoc_insertion_point(class_scope:ru.ifmo.java.task.protocol.ServerData)
+    private static final ru.ifmo.java.task.protocol.Protocol.ServerData DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ru.ifmo.java.task.protocol.Protocol.ServerData();
+    }
+
+    public static ru.ifmo.java.task.protocol.Protocol.ServerData getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ServerData>
+        PARSER = new com.google.protobuf.AbstractParser<ServerData>() {
+      @java.lang.Override
+      public ServerData parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ServerData(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ServerData> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ServerData> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public ru.ifmo.java.task.protocol.Protocol.ServerData getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ClientDataOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:ru.ifmo.java.task.protocol.ClientData)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int64 waitForTime = 1;</code>
+     * @return The waitForTime.
+     */
+    long getWaitForTime();
+
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     */
+    java.util.List<ru.ifmo.java.task.protocol.Protocol.RequestData> 
+        getRequestDataList();
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     */
+    ru.ifmo.java.task.protocol.Protocol.RequestData getRequestData(int index);
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     */
+    int getRequestDataCount();
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     */
+    java.util.List<? extends ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder> 
+        getRequestDataOrBuilderList();
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     */
+    ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder getRequestDataOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code ru.ifmo.java.task.protocol.ClientData}
+   */
+  public  static final class ClientData extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:ru.ifmo.java.task.protocol.ClientData)
+      ClientDataOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ClientData.newBuilder() to construct.
+    private ClientData(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ClientData() {
+      requestData_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ClientData();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ClientData(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+
+              waitForTime_ = input.readInt64();
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                requestData_ = new java.util.ArrayList<ru.ifmo.java.task.protocol.Protocol.RequestData>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              requestData_.add(
+                  input.readMessage(ru.ifmo.java.task.protocol.Protocol.RequestData.parser(), extensionRegistry));
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          requestData_ = java.util.Collections.unmodifiableList(requestData_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_ClientData_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_ClientData_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ru.ifmo.java.task.protocol.Protocol.ClientData.class, ru.ifmo.java.task.protocol.Protocol.ClientData.Builder.class);
+    }
+
+    public static final int WAITFORTIME_FIELD_NUMBER = 1;
+    private long waitForTime_;
+    /**
+     * <code>int64 waitForTime = 1;</code>
+     * @return The waitForTime.
+     */
+    public long getWaitForTime() {
+      return waitForTime_;
+    }
+
+    public static final int REQUESTDATA_FIELD_NUMBER = 2;
+    private java.util.List<ru.ifmo.java.task.protocol.Protocol.RequestData> requestData_;
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     */
+    public java.util.List<ru.ifmo.java.task.protocol.Protocol.RequestData> getRequestDataList() {
+      return requestData_;
+    }
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     */
+    public java.util.List<? extends ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder> 
+        getRequestDataOrBuilderList() {
+      return requestData_;
+    }
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     */
+    public int getRequestDataCount() {
+      return requestData_.size();
+    }
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     */
+    public ru.ifmo.java.task.protocol.Protocol.RequestData getRequestData(int index) {
+      return requestData_.get(index);
+    }
+    /**
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     */
+    public ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder getRequestDataOrBuilder(
+        int index) {
+      return requestData_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (waitForTime_ != 0L) {
+        output.writeInt64(1, waitForTime_);
+      }
+      for (int i = 0; i < requestData_.size(); i++) {
+        output.writeMessage(2, requestData_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (waitForTime_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, waitForTime_);
+      }
+      for (int i = 0; i < requestData_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, requestData_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof ru.ifmo.java.task.protocol.Protocol.ClientData)) {
+        return super.equals(obj);
+      }
+      ru.ifmo.java.task.protocol.Protocol.ClientData other = (ru.ifmo.java.task.protocol.Protocol.ClientData) obj;
+
+      if (getWaitForTime()
+          != other.getWaitForTime()) return false;
+      if (!getRequestDataList()
+          .equals(other.getRequestDataList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + WAITFORTIME_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getWaitForTime());
+      if (getRequestDataCount() > 0) {
+        hash = (37 * hash) + REQUESTDATA_FIELD_NUMBER;
+        hash = (53 * hash) + getRequestDataList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static ru.ifmo.java.task.protocol.Protocol.ClientData parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ClientData parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ClientData parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ClientData parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ClientData parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ClientData parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ClientData parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ClientData parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ClientData parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ClientData parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ClientData parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.ClientData parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ru.ifmo.java.task.protocol.Protocol.ClientData prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code ru.ifmo.java.task.protocol.ClientData}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:ru.ifmo.java.task.protocol.ClientData)
+        ru.ifmo.java.task.protocol.Protocol.ClientDataOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_ClientData_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_ClientData_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ru.ifmo.java.task.protocol.Protocol.ClientData.class, ru.ifmo.java.task.protocol.Protocol.ClientData.Builder.class);
+      }
+
+      // Construct using ru.ifmo.java.task.protocol.Protocol.ClientData.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getRequestDataFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        waitForTime_ = 0L;
+
+        if (requestDataBuilder_ == null) {
+          requestData_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          requestDataBuilder_.clear();
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_ClientData_descriptor;
+      }
+
+      @java.lang.Override
+      public ru.ifmo.java.task.protocol.Protocol.ClientData getDefaultInstanceForType() {
+        return ru.ifmo.java.task.protocol.Protocol.ClientData.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public ru.ifmo.java.task.protocol.Protocol.ClientData build() {
+        ru.ifmo.java.task.protocol.Protocol.ClientData result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public ru.ifmo.java.task.protocol.Protocol.ClientData buildPartial() {
+        ru.ifmo.java.task.protocol.Protocol.ClientData result = new ru.ifmo.java.task.protocol.Protocol.ClientData(this);
+        int from_bitField0_ = bitField0_;
+        result.waitForTime_ = waitForTime_;
+        if (requestDataBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            requestData_ = java.util.Collections.unmodifiableList(requestData_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.requestData_ = requestData_;
+        } else {
+          result.requestData_ = requestDataBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ru.ifmo.java.task.protocol.Protocol.ClientData) {
+          return mergeFrom((ru.ifmo.java.task.protocol.Protocol.ClientData)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ru.ifmo.java.task.protocol.Protocol.ClientData other) {
+        if (other == ru.ifmo.java.task.protocol.Protocol.ClientData.getDefaultInstance()) return this;
+        if (other.getWaitForTime() != 0L) {
+          setWaitForTime(other.getWaitForTime());
+        }
+        if (requestDataBuilder_ == null) {
+          if (!other.requestData_.isEmpty()) {
+            if (requestData_.isEmpty()) {
+              requestData_ = other.requestData_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureRequestDataIsMutable();
+              requestData_.addAll(other.requestData_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.requestData_.isEmpty()) {
+            if (requestDataBuilder_.isEmpty()) {
+              requestDataBuilder_.dispose();
+              requestDataBuilder_ = null;
+              requestData_ = other.requestData_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              requestDataBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getRequestDataFieldBuilder() : null;
+            } else {
+              requestDataBuilder_.addAllMessages(other.requestData_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ru.ifmo.java.task.protocol.Protocol.ClientData parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ru.ifmo.java.task.protocol.Protocol.ClientData) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private long waitForTime_ ;
+      /**
+       * <code>int64 waitForTime = 1;</code>
+       * @return The waitForTime.
+       */
+      public long getWaitForTime() {
+        return waitForTime_;
+      }
+      /**
+       * <code>int64 waitForTime = 1;</code>
+       * @param value The waitForTime to set.
+       * @return This builder for chaining.
+       */
+      public Builder setWaitForTime(long value) {
+        
+        waitForTime_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 waitForTime = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearWaitForTime() {
+        
+        waitForTime_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<ru.ifmo.java.task.protocol.Protocol.RequestData> requestData_ =
+        java.util.Collections.emptyList();
+      private void ensureRequestDataIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          requestData_ = new java.util.ArrayList<ru.ifmo.java.task.protocol.Protocol.RequestData>(requestData_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          ru.ifmo.java.task.protocol.Protocol.RequestData, ru.ifmo.java.task.protocol.Protocol.RequestData.Builder, ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder> requestDataBuilder_;
+
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public java.util.List<ru.ifmo.java.task.protocol.Protocol.RequestData> getRequestDataList() {
+        if (requestDataBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(requestData_);
+        } else {
+          return requestDataBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public int getRequestDataCount() {
+        if (requestDataBuilder_ == null) {
+          return requestData_.size();
+        } else {
+          return requestDataBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public ru.ifmo.java.task.protocol.Protocol.RequestData getRequestData(int index) {
+        if (requestDataBuilder_ == null) {
+          return requestData_.get(index);
+        } else {
+          return requestDataBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public Builder setRequestData(
+          int index, ru.ifmo.java.task.protocol.Protocol.RequestData value) {
+        if (requestDataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRequestDataIsMutable();
+          requestData_.set(index, value);
+          onChanged();
+        } else {
+          requestDataBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public Builder setRequestData(
+          int index, ru.ifmo.java.task.protocol.Protocol.RequestData.Builder builderForValue) {
+        if (requestDataBuilder_ == null) {
+          ensureRequestDataIsMutable();
+          requestData_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          requestDataBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public Builder addRequestData(ru.ifmo.java.task.protocol.Protocol.RequestData value) {
+        if (requestDataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRequestDataIsMutable();
+          requestData_.add(value);
+          onChanged();
+        } else {
+          requestDataBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public Builder addRequestData(
+          int index, ru.ifmo.java.task.protocol.Protocol.RequestData value) {
+        if (requestDataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRequestDataIsMutable();
+          requestData_.add(index, value);
+          onChanged();
+        } else {
+          requestDataBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public Builder addRequestData(
+          ru.ifmo.java.task.protocol.Protocol.RequestData.Builder builderForValue) {
+        if (requestDataBuilder_ == null) {
+          ensureRequestDataIsMutable();
+          requestData_.add(builderForValue.build());
+          onChanged();
+        } else {
+          requestDataBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public Builder addRequestData(
+          int index, ru.ifmo.java.task.protocol.Protocol.RequestData.Builder builderForValue) {
+        if (requestDataBuilder_ == null) {
+          ensureRequestDataIsMutable();
+          requestData_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          requestDataBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public Builder addAllRequestData(
+          java.lang.Iterable<? extends ru.ifmo.java.task.protocol.Protocol.RequestData> values) {
+        if (requestDataBuilder_ == null) {
+          ensureRequestDataIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, requestData_);
+          onChanged();
+        } else {
+          requestDataBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public Builder clearRequestData() {
+        if (requestDataBuilder_ == null) {
+          requestData_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          requestDataBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public Builder removeRequestData(int index) {
+        if (requestDataBuilder_ == null) {
+          ensureRequestDataIsMutable();
+          requestData_.remove(index);
+          onChanged();
+        } else {
+          requestDataBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public ru.ifmo.java.task.protocol.Protocol.RequestData.Builder getRequestDataBuilder(
+          int index) {
+        return getRequestDataFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder getRequestDataOrBuilder(
+          int index) {
+        if (requestDataBuilder_ == null) {
+          return requestData_.get(index);  } else {
+          return requestDataBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public java.util.List<? extends ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder> 
+           getRequestDataOrBuilderList() {
+        if (requestDataBuilder_ != null) {
+          return requestDataBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(requestData_);
+        }
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public ru.ifmo.java.task.protocol.Protocol.RequestData.Builder addRequestDataBuilder() {
+        return getRequestDataFieldBuilder().addBuilder(
+            ru.ifmo.java.task.protocol.Protocol.RequestData.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public ru.ifmo.java.task.protocol.Protocol.RequestData.Builder addRequestDataBuilder(
+          int index) {
+        return getRequestDataFieldBuilder().addBuilder(
+            index, ru.ifmo.java.task.protocol.Protocol.RequestData.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       */
+      public java.util.List<ru.ifmo.java.task.protocol.Protocol.RequestData.Builder> 
+           getRequestDataBuilderList() {
+        return getRequestDataFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          ru.ifmo.java.task.protocol.Protocol.RequestData, ru.ifmo.java.task.protocol.Protocol.RequestData.Builder, ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder> 
+          getRequestDataFieldBuilder() {
+        if (requestDataBuilder_ == null) {
+          requestDataBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              ru.ifmo.java.task.protocol.Protocol.RequestData, ru.ifmo.java.task.protocol.Protocol.RequestData.Builder, ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder>(
+                  requestData_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          requestData_ = null;
+        }
+        return requestDataBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:ru.ifmo.java.task.protocol.ClientData)
+    }
+
+    // @@protoc_insertion_point(class_scope:ru.ifmo.java.task.protocol.ClientData)
+    private static final ru.ifmo.java.task.protocol.Protocol.ClientData DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ru.ifmo.java.task.protocol.Protocol.ClientData();
+    }
+
+    public static ru.ifmo.java.task.protocol.Protocol.ClientData getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ClientData>
+        PARSER = new com.google.protobuf.AbstractParser<ClientData>() {
+      @java.lang.Override
+      public ClientData parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ClientData(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ClientData> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ClientData> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public ru.ifmo.java.task.protocol.Protocol.ClientData getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface RequestDataOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:ru.ifmo.java.task.protocol.RequestData)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int64 taskTime = 1;</code>
+     * @return The taskTime.
+     */
+    long getTaskTime();
+
+    /**
+     * <code>int64 clientTime = 2;</code>
+     * @return The clientTime.
+     */
+    long getClientTime();
+  }
+  /**
+   * Protobuf type {@code ru.ifmo.java.task.protocol.RequestData}
+   */
+  public  static final class RequestData extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:ru.ifmo.java.task.protocol.RequestData)
+      RequestDataOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use RequestData.newBuilder() to construct.
+    private RequestData(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private RequestData() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new RequestData();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private RequestData(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+
+              taskTime_ = input.readInt64();
+              break;
+            }
+            case 16: {
+
+              clientTime_ = input.readInt64();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_RequestData_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_RequestData_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ru.ifmo.java.task.protocol.Protocol.RequestData.class, ru.ifmo.java.task.protocol.Protocol.RequestData.Builder.class);
+    }
+
+    public static final int TASKTIME_FIELD_NUMBER = 1;
+    private long taskTime_;
+    /**
+     * <code>int64 taskTime = 1;</code>
+     * @return The taskTime.
+     */
+    public long getTaskTime() {
+      return taskTime_;
+    }
+
+    public static final int CLIENTTIME_FIELD_NUMBER = 2;
+    private long clientTime_;
+    /**
+     * <code>int64 clientTime = 2;</code>
+     * @return The clientTime.
+     */
+    public long getClientTime() {
+      return clientTime_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (taskTime_ != 0L) {
+        output.writeInt64(1, taskTime_);
+      }
+      if (clientTime_ != 0L) {
+        output.writeInt64(2, clientTime_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (taskTime_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, taskTime_);
+      }
+      if (clientTime_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(2, clientTime_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof ru.ifmo.java.task.protocol.Protocol.RequestData)) {
+        return super.equals(obj);
+      }
+      ru.ifmo.java.task.protocol.Protocol.RequestData other = (ru.ifmo.java.task.protocol.Protocol.RequestData) obj;
+
+      if (getTaskTime()
+          != other.getTaskTime()) return false;
+      if (getClientTime()
+          != other.getClientTime()) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + TASKTIME_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getTaskTime());
+      hash = (37 * hash) + CLIENTTIME_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getClientTime());
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static ru.ifmo.java.task.protocol.Protocol.RequestData parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.RequestData parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.RequestData parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.RequestData parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.RequestData parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.RequestData parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.RequestData parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.RequestData parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.RequestData parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.RequestData parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.RequestData parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ru.ifmo.java.task.protocol.Protocol.RequestData parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ru.ifmo.java.task.protocol.Protocol.RequestData prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code ru.ifmo.java.task.protocol.RequestData}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:ru.ifmo.java.task.protocol.RequestData)
+        ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_RequestData_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_RequestData_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ru.ifmo.java.task.protocol.Protocol.RequestData.class, ru.ifmo.java.task.protocol.Protocol.RequestData.Builder.class);
+      }
+
+      // Construct using ru.ifmo.java.task.protocol.Protocol.RequestData.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        taskTime_ = 0L;
+
+        clientTime_ = 0L;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ru.ifmo.java.task.protocol.Protocol.internal_static_ru_ifmo_java_task_protocol_RequestData_descriptor;
+      }
+
+      @java.lang.Override
+      public ru.ifmo.java.task.protocol.Protocol.RequestData getDefaultInstanceForType() {
+        return ru.ifmo.java.task.protocol.Protocol.RequestData.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public ru.ifmo.java.task.protocol.Protocol.RequestData build() {
+        ru.ifmo.java.task.protocol.Protocol.RequestData result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public ru.ifmo.java.task.protocol.Protocol.RequestData buildPartial() {
+        ru.ifmo.java.task.protocol.Protocol.RequestData result = new ru.ifmo.java.task.protocol.Protocol.RequestData(this);
+        result.taskTime_ = taskTime_;
+        result.clientTime_ = clientTime_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ru.ifmo.java.task.protocol.Protocol.RequestData) {
+          return mergeFrom((ru.ifmo.java.task.protocol.Protocol.RequestData)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ru.ifmo.java.task.protocol.Protocol.RequestData other) {
+        if (other == ru.ifmo.java.task.protocol.Protocol.RequestData.getDefaultInstance()) return this;
+        if (other.getTaskTime() != 0L) {
+          setTaskTime(other.getTaskTime());
+        }
+        if (other.getClientTime() != 0L) {
+          setClientTime(other.getClientTime());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ru.ifmo.java.task.protocol.Protocol.RequestData parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ru.ifmo.java.task.protocol.Protocol.RequestData) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private long taskTime_ ;
+      /**
+       * <code>int64 taskTime = 1;</code>
+       * @return The taskTime.
+       */
+      public long getTaskTime() {
+        return taskTime_;
+      }
+      /**
+       * <code>int64 taskTime = 1;</code>
+       * @param value The taskTime to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTaskTime(long value) {
+        
+        taskTime_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 taskTime = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTaskTime() {
+        
+        taskTime_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private long clientTime_ ;
+      /**
+       * <code>int64 clientTime = 2;</code>
+       * @return The clientTime.
+       */
+      public long getClientTime() {
+        return clientTime_;
+      }
+      /**
+       * <code>int64 clientTime = 2;</code>
+       * @param value The clientTime to set.
+       * @return This builder for chaining.
+       */
+      public Builder setClientTime(long value) {
+        
+        clientTime_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 clientTime = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearClientTime() {
+        
+        clientTime_ = 0L;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:ru.ifmo.java.task.protocol.RequestData)
+    }
+
+    // @@protoc_insertion_point(class_scope:ru.ifmo.java.task.protocol.RequestData)
+    private static final ru.ifmo.java.task.protocol.Protocol.RequestData DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ru.ifmo.java.task.protocol.Protocol.RequestData();
+    }
+
+    public static ru.ifmo.java.task.protocol.Protocol.RequestData getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<RequestData>
+        PARSER = new com.google.protobuf.AbstractParser<RequestData>() {
+      @java.lang.Override
+      public RequestData parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new RequestData(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<RequestData> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<RequestData> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public ru.ifmo.java.task.protocol.Protocol.RequestData getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_ru_ifmo_java_task_protocol_Request_descriptor;
   private static final 
@@ -1388,6 +3589,21 @@ public final class Protocol {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_ru_ifmo_java_task_protocol_Response_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ru_ifmo_java_task_protocol_ServerData_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ru_ifmo_java_task_protocol_ServerData_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ru_ifmo_java_task_protocol_ClientData_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ru_ifmo_java_task_protocol_ClientData_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ru_ifmo_java_task_protocol_RequestData_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ru_ifmo_java_task_protocol_RequestData_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1400,7 +3616,12 @@ public final class Protocol {
       "\n\016protocol.proto\022\032ru.ifmo.java.task.prot" +
       "ocol\"%\n\007Request\022\014\n\004size\030\001 \001(\005\022\014\n\004elem\030\002 " +
       "\003(\005\"&\n\010Response\022\014\n\004size\030\001 \001(\005\022\014\n\004elem\030\002 " +
-      "\003(\005b\006proto3"
+      "\003(\005\"H\n\nServerData\022:\n\nclientData\030\001 \003(\0132&." +
+      "ru.ifmo.java.task.protocol.ClientData\"_\n" +
+      "\nClientData\022\023\n\013waitForTime\030\001 \001(\003\022<\n\013requ" +
+      "estData\030\002 \003(\0132\'.ru.ifmo.java.task.protoc" +
+      "ol.RequestData\"3\n\013RequestData\022\020\n\010taskTim" +
+      "e\030\001 \001(\003\022\022\n\nclientTime\030\002 \001(\003b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -1418,6 +3639,24 @@ public final class Protocol {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ru_ifmo_java_task_protocol_Response_descriptor,
         new java.lang.String[] { "Size", "Elem", });
+    internal_static_ru_ifmo_java_task_protocol_ServerData_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_ru_ifmo_java_task_protocol_ServerData_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ru_ifmo_java_task_protocol_ServerData_descriptor,
+        new java.lang.String[] { "ClientData", });
+    internal_static_ru_ifmo_java_task_protocol_ClientData_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_ru_ifmo_java_task_protocol_ClientData_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ru_ifmo_java_task_protocol_ClientData_descriptor,
+        new java.lang.String[] { "WaitForTime", "RequestData", });
+    internal_static_ru_ifmo_java_task_protocol_RequestData_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_ru_ifmo_java_task_protocol_RequestData_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ru_ifmo_java_task_protocol_RequestData_descriptor,
+        new java.lang.String[] { "TaskTime", "ClientTime", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

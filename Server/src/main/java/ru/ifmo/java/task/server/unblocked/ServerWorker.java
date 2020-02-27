@@ -27,11 +27,11 @@ public class ServerWorker {
     private int numOfBytes = 0;
 
     private boolean isFirst = true;
-    private TaskData currTaskData;
+    private RequestStat currRequestStat;
 
     private ByteBuffer head = ByteBuffer.allocate(Constants.INT_SIZE);
     private ByteBuffer body;
-    private ConcurrentLinkedQueue<TaskData> bufferQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<RequestStat> bufferQueue = new ConcurrentLinkedQueue<>();
 
     private int taskCounter;
 
@@ -63,7 +63,7 @@ public class ServerWorker {
 
     public void getRequestAndHandle() throws IOException {
         if (isFirst) {
-            currTaskData = clientStat.registerRequest();
+            currRequestStat = clientStat.registerRequest();
             isFirst = false;
         }
 
@@ -73,7 +73,7 @@ public class ServerWorker {
                 num = socketChannel.read(head);
             } while (num == 0);
 
-            currTaskData.startClient = System.currentTimeMillis();
+            currRequestStat.startClient = System.currentTimeMillis();
 
             numOfBytes += num;
             socketChannel.read(head);
@@ -98,7 +98,7 @@ public class ServerWorker {
                 Request request = Request.parseFrom(protoBuf);
                 assert request != null;
 
-                pool.submit(initTask(request, currTaskData));
+                pool.submit(initTask(request, currRequestStat));
 
                 numOfBytes = 0;
                 isSizeReading = true;
@@ -112,14 +112,14 @@ public class ServerWorker {
         }
     }
 
-    private Runnable initTask(Request request, TaskData taskData) {
+    private Runnable initTask(Request request, RequestStat requestStat) {
         return () -> {
-            Response response = processRequest(request, taskData);
-            putOnQueue(response, taskData);
+            Response response = processRequest(request, requestStat);
+            putOnQueue(response, requestStat);
         };
     }
 
-    private void putOnQueue(Response response, TaskData taskData) {
+    private void putOnQueue(Response response, RequestStat requestStat) {
         try {
             ByteArrayOutputStream protoBufOS = new ByteArrayOutputStream(response.getSerializedSize());
             response.writeTo(protoBufOS);
@@ -128,8 +128,8 @@ public class ServerWorker {
             result.put(protoBufOS.toByteArray());
             result.flip();
 
-            taskData.byteBuffer = result;
-            bufferQueue.add(taskData);
+            requestStat.byteBuffer = result;
+            bufferQueue.add(requestStat);
 
             outputSelector.wakeup();
         } catch (Exception e) {
@@ -145,8 +145,8 @@ public class ServerWorker {
     public synchronized void writeRes() throws IOException {
         assert !bufferQueue.isEmpty();
 
-        TaskData taskData = bufferQueue.poll();
-        ByteBuffer result = taskData.byteBuffer;
+        RequestStat requestStat = bufferQueue.poll();
+        ByteBuffer result = requestStat.byteBuffer;
 
         ByteBuffer sizeBB = ByteBuffer.allocate(Constants.INT_SIZE).putInt(result.remaining());
         sizeBB.flip();
@@ -159,7 +159,7 @@ public class ServerWorker {
             socketChannel.write(result);
         }
 
-        taskData.clientTime = System.currentTimeMillis() - taskData.startClient;
+        requestStat.clientTime = System.currentTimeMillis() - requestStat.startClient;
 
         taskCounter -= 1;
         if (taskCounter == 0) {
@@ -167,10 +167,10 @@ public class ServerWorker {
         }
     }
 
-    private Response processRequest(Request request, TaskData taskData) {
-        taskData.startTask = System.currentTimeMillis();
+    private Response processRequest(Request request, RequestStat requestStat) {
+        requestStat.startTask = System.currentTimeMillis();
         List<Integer> sortedList = Constants.SORT.apply(request.getElemList());
-        taskData.taskTime = System.currentTimeMillis() - taskData.startTask;
+        requestStat.taskTime = System.currentTimeMillis() - requestStat.startTask;
 
         return Response.newBuilder()
                 .setSize(request.getSize())

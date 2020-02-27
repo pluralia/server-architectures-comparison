@@ -32,7 +32,7 @@ public class ServerStat {
     }
 
     public static class ClientStat {
-        private final List<TaskData> taskDataList = new ArrayList<>();
+        private final List<RequestStat> requestStatList = new ArrayList<>();
         private final int tasksNum;
 
         public long startWaitFor = 0;
@@ -46,27 +46,27 @@ public class ServerStat {
             return tasksNum;
         }
 
-        public TaskData registerRequest() {
-            assert taskDataList.size() > tasksNum;
+        public RequestStat registerRequest() {
+            assert requestStatList.size() > tasksNum;
 
-            TaskData taskData = new TaskData();
-            taskDataList.add(taskData);
-            return taskData;
+            RequestStat requestStat = new RequestStat();
+            requestStatList.add(requestStat);
+            return requestStat;
         }
 
         public void save() {
             System.out.println("CLIENT");
-            taskDataList.removeIf(TaskData::isNotDone);
+            requestStatList.removeIf(RequestStat::isNotDone);
 
             System.out.println("WaitForTime: " + waitForTime);
 
-            for (int i = 0; i < taskDataList.size(); i++) {
+            for (int i = 0; i < requestStatList.size(); i++) {
                 System.out.print(i + ": ");
-                taskDataList.get(i).save();
+                requestStatList.get(i).save();
             }
         }
 
-        public static class TaskData {
+        public static class RequestStat {
             public long startTask = 0;
             public long taskTime = 0;
 
