@@ -3,13 +3,11 @@ package ru.ifmo.java.task.server;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ServerStat {
-    private int clientsNum;
-    private int tasksNum;
-    private List<ClientStat> clientStatList = new ArrayList<>();
+    private final int clientsNum;
+    private final int tasksNum;
+    private final List<ClientStat> clientStatList = new ArrayList<>();
 
     public ServerStat(int clientsNum, int tasksNum) {
         this.clientsNum = clientsNum;
@@ -34,7 +32,7 @@ public class ServerStat {
     }
 
     public static class ClientStat {
-        private ConcurrentLinkedQueue<TaskData> taskDataQueue = new ConcurrentLinkedQueue<>();
+        private final List<TaskData> taskDataList = new ArrayList<>();
         private final int tasksNum;
 
         public long startWaitFor = 0;
@@ -49,20 +47,22 @@ public class ServerStat {
         }
 
         public TaskData registerRequest() {
+            assert taskDataList.size() > tasksNum;
+
             TaskData taskData = new TaskData();
-            taskDataQueue.add(taskData);
+            taskDataList.add(taskData);
             return taskData;
         }
 
         public void save() {
             System.out.println("CLIENT");
-            taskDataQueue.removeIf(TaskData::isNotDone);
+            taskDataList.removeIf(TaskData::isNotDone);
 
             System.out.println("WaitForTime: " + waitForTime);
 
-            while (!taskDataQueue.isEmpty()) {
-                System.out.print(taskDataQueue.size() + ": ");
-                Objects.requireNonNull(taskDataQueue.poll()).save();
+            for (int i = 0; i < taskDataList.size(); i++) {
+                System.out.print(i + ": ");
+                taskDataList.get(i).save();
             }
         }
 

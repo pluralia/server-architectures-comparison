@@ -42,6 +42,7 @@ public class AbstractBlockedServerWorker {
     }
 
     public Request getRequest(TaskData taskData) throws IOException {
+        while (input.available() == 0) {}
         taskData.startClient = System.currentTimeMillis();
 
         byte[] protoBuf = Lib.receive(input);

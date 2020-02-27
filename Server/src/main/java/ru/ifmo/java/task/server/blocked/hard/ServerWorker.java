@@ -8,9 +8,7 @@ import ru.ifmo.java.task.server.blocked.AbstractBlockedServerWorker;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 public class ServerWorker extends AbstractBlockedServerWorker {
 //    public final ClientStat clientStat;
@@ -43,11 +41,11 @@ public class ServerWorker extends AbstractBlockedServerWorker {
 
                 for (int i = 0; i < clientStat.getTasksNum(); i++) {
                     TaskData taskData = clientStat.registerRequest();
-                    taskData.startClient = System.currentTimeMillis();
 
-                    pool.submit(initTask(getRequest(taskData), taskData));
+                    Request request = getRequest(taskData);
+                    pool.submit(initTask(request, taskData));
                 }
-            } catch(IOException | InterruptedException e) {
+            } catch(Exception e) {
 //                System.out.println("Server: input thread exception: " + e.getMessage());
                 doneSignal.countDown();
             }
@@ -76,7 +74,7 @@ public class ServerWorker extends AbstractBlockedServerWorker {
                 if (taskCounter == 0) {
                     doneSignal.countDown();
                 }
-            } catch(IOException e) {
+            } catch(Exception e) {
 //                System.out.println("Server: output thread exception: " + e.getMessage());
                 doneSignal.countDown();
             }

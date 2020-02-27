@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 
 abstract public class AbstractBlockedServer extends AbstractServer {
     public ExecutorService pool;
@@ -41,16 +40,15 @@ abstract public class AbstractBlockedServer extends AbstractServer {
         startSignal.countDown();
 
         doneSignal.await();
-        serverStat.save();
 
-        serverSocket.close();
-
-        pool.shutdown();
-        pool.awaitTermination(1000, TimeUnit.SECONDS);
-
+        pool.shutdownNow();
         for (final AbstractBlockedServerWorker serverWorker : serverWorkerList) {
             serverWorker.close();
         }
+
+        serverSocket.close();
+
+        serverStat.save();
     }
 
     @Override

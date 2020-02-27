@@ -36,7 +36,7 @@ public class ServerWorker extends AbstractBlockedServerWorker implements Runnabl
                 Protocol.Response response = processRequest(request, taskData);
                 sendResponse(response, taskData);
             }
-        } catch(IOException | InterruptedException e) {
+        } catch(Exception e) {
 //            System.out.println("Server: tasks exception: " + e.getMessage());
         } finally {
             doneSignal.countDown();

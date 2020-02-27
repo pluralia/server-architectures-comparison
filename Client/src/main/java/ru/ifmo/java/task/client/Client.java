@@ -23,9 +23,9 @@ public class Client implements Runnable {
     private final int sleepTime;
     private final AtomicLong stat;
 
-    private Socket socket;
-    private InputStream input;
-    private OutputStream output;
+    private final Socket socket;
+    private final InputStream input;
+    private final OutputStream output;
 
     public Client(int port, int taskNum, int taskSize, int sleepTime, AtomicLong stat) throws IOException {
         this.taskNum = taskNum;
@@ -44,8 +44,9 @@ public class Client implements Runnable {
             for (int i = 0; i < taskNum; i++) {
                 long start = System.currentTimeMillis();
                 sendRequest(generateArray());
-                System.out.print(receiveResponse() + " ");
-                stat.addAndGet(System.currentTimeMillis() - start);
+                if (receiveResponse()) {
+                    stat.addAndGet(System.currentTimeMillis() - start);
+                }
 
                 Thread.sleep(sleepTime);
             }
@@ -55,7 +56,7 @@ public class Client implements Runnable {
             try {
                 socket.close();
             } catch (IOException e) {
-                System.out.println("Client: socket close exception: " + e.getMessage());
+//                System.out.println("Client: socket close exception: " + e.getMessage());
             }
         }
     }
@@ -79,14 +80,10 @@ public class Client implements Runnable {
         request.writeTo(output);
     }
 
-    private int receiveResponse() throws IOException {
+    private boolean receiveResponse() throws IOException {
         byte[] protoBuf = Lib.receive(input);
         Response response = Response.parseFrom(protoBuf);
 
-        List<Integer> sortedArray = response.getElemList();
-        if (response.getSize() > 0) {
-            return sortedArray.get(0) - sortedArray.get(taskSize - 1);
-        }
-        return 1;
+        return response.getElemList().size() == taskSize;
     }
 }
