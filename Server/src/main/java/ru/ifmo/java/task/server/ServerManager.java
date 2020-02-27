@@ -11,7 +11,7 @@ public class ServerManager {
     private AbstractServer server;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        new ServerManager().run(Constants.BLOCKED_HARD, 10, 8);
+        new ServerManager().run(Constants.BLOCKED_SOFT, 10, 8);
     }
 
     public void run(String architectureType, int clientNum, int tasksNum) throws IOException, InterruptedException {
