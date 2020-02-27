@@ -1,8 +1,11 @@
 package ru.ifmo.java.task.server;
 
+import ru.ifmo.java.task.protocol.Protocol;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ServerStat {
     private final int clientsNum;
@@ -26,9 +29,14 @@ public class ServerStat {
         return clientStat;
     }
 
-    public void save() {
-        System.out.println("SAVE");
-        clientStatList.forEach(ClientStat::save);
+    public Protocol.ServerData getStat() {
+        List<Protocol.ClientData> clientDataList =
+                clientStatList.stream()
+                        .map(ClientStat::getStat)
+                        .collect(Collectors.toList());
+        return Protocol.ServerData.newBuilder()
+                .addAllClientData(clientDataList)
+                .build();
     }
 
     public static class ClientStat {
@@ -54,16 +62,16 @@ public class ServerStat {
             return requestStat;
         }
 
-        public void save() {
-            System.out.println("CLIENT");
-            requestStatList.removeIf(RequestStat::isNotDone);
-
-            System.out.println("WaitForTime: " + waitForTime);
-
-            for (int i = 0; i < requestStatList.size(); i++) {
-                System.out.print(i + ": ");
-                requestStatList.get(i).save();
-            }
+        public Protocol.ClientData getStat() {
+            List<Protocol.RequestData> requestDataList =
+                    requestStatList.stream()
+                            .filter(RequestStat::isDone)
+                            .map(RequestStat::getStat)
+                            .collect(Collectors.toList());
+            return Protocol.ClientData.newBuilder()
+                    .setWaitForTime(waitForTime)
+                    .addAllRequestData(requestDataList)
+                    .build();
         }
 
         public static class RequestStat {
@@ -75,12 +83,15 @@ public class ServerStat {
 
             public ByteBuffer byteBuffer = null;
 
-            public boolean isNotDone() {
-                return taskTime == 0 || clientTime == 0;
+            public boolean isDone() {
+                return taskTime > 0 && clientTime > 0;
             }
 
-            public void save() {
-                System.out.println("taskTime: " + taskTime + " | clientTime: " + clientTime);
+            public Protocol.RequestData getStat() {
+                return Protocol.RequestData.newBuilder()
+                        .setTaskTime(taskTime)
+                        .setClientTime(clientTime)
+                        .build();
             }
         }
     }

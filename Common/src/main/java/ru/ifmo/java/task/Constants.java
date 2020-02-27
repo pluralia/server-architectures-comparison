@@ -29,6 +29,8 @@ public class Constants {
 
     public static final int UNBLOCKED_PORT = 1236;
 
+    public static final int COMMON_PORT = 1237;
+
     public static final Function<List<Integer>, List<Integer>> SORT = Sort::bubbleSort;
 
     public static final int MIN = -1000;

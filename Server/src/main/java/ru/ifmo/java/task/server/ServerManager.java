@@ -6,6 +6,8 @@ import ru.ifmo.java.task.server.blocked.soft.BlockedSoftServer;
 import ru.ifmo.java.task.server.unblocked.UnblockedServer;
 
 import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class ServerManager {
     private AbstractServer server;
@@ -30,6 +32,17 @@ public class ServerManager {
         }
 
         server.run();
+
+        System.out.println("SERVER --> STAT");
+
+        ServerSocket serverSocket = new ServerSocket(Constants.COMMON_PORT);
+        Socket socket = serverSocket.accept();
+
+        serverStat.getStat().writeDelimitedTo(socket.getOutputStream());
+
+        socket.close();
+        serverSocket.close();
+
     }
 }
 

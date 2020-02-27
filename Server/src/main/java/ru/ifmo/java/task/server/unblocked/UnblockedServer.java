@@ -64,8 +64,6 @@ public class UnblockedServer extends AbstractServer {
 
         inputSelector.close();
         outputSelector.close();
-
-        serverStat.save();
     }
 
     private Runnable initInputSelectorThread() {
