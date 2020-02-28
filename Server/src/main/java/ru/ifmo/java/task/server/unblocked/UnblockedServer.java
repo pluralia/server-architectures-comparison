@@ -88,8 +88,6 @@ public class UnblockedServer extends AbstractServer {
                         if (selectionKey.isReadable()) {
                             ServerWorker serverWorker = (ServerWorker) selectionKey.attachment();
                             assert serverWorker != null;
-
-//                            ClientStat clientStat = serverWorker.getClientStat();
                             serverWorker.getRequestAndHandle();
                         }
 

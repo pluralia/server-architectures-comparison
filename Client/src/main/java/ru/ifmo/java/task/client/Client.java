@@ -87,10 +87,10 @@ public class Client implements Runnable {
         byte[] protoBuf = Lib.receive(input);
         Response response = Response.parseFrom(protoBuf);
 
-//        System.out.println(response.getSize());
-//        System.out.println(response.getElemList().stream()
-//                .map(Object::toString)
-//                .collect(Collectors.joining(" ")));
+        System.out.println(response.getSize());
+        System.out.println(response.getElemList().stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(" ")));
 
         return response.getElemList().size() == taskSize;
     }

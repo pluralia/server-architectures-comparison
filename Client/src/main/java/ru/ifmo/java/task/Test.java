@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 public class Test {
     public static void main(String[] args) throws InterruptedException, IOException {
-        new Test(Constants.UNBLOCKED, 2, 10, 10000, 0).run();
+        new Test(Constants.UNBLOCKED, 2, 3, 10000, 1000).run();
     }
 
     private final String archType;

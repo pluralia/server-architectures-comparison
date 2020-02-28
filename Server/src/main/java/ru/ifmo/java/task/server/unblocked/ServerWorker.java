@@ -26,12 +26,14 @@ public class ServerWorker {
     private boolean isSizeReading = true;
     private int numOfBytes = 0;
 
-    private boolean isFirst = true;
+    private boolean isFirstRead = true;
     private RequestStat currRequestStat;
 
     private ByteBuffer head = ByteBuffer.allocate(Constants.INT_SIZE);
     private ByteBuffer body;
     private ConcurrentLinkedQueue<RequestStat> bufferQueue = new ConcurrentLinkedQueue<>();
+
+    private boolean isFirstWrite = true;
 
     private int taskCounter;
 
@@ -60,20 +62,14 @@ public class ServerWorker {
     }
 
     public void getRequestAndHandle() throws IOException {
-        if (isFirst) {
+        if (isFirstRead) {
             currRequestStat = clientStat.registerRequest();
-            isFirst = false;
+            isFirstRead = false;
+            currRequestStat.startClient = System.currentTimeMillis();
         }
 
         if (isSizeReading) {
-            long num;
-            do {
-                num = socketChannel.read(head);
-            } while (num == 0);
-
-            currRequestStat.startClient = System.currentTimeMillis();
-
-            numOfBytes += num;
+            numOfBytes += socketChannel.read(head);
             socketChannel.read(head);
 
             if (numOfBytes == Constants.INT_SIZE) {
@@ -83,7 +79,6 @@ public class ServerWorker {
                 numOfBytes = 0;
                 isSizeReading = false;
                 body = ByteBuffer.allocate(size);
-                getRequestAndHandle();
             }
         } else {
             numOfBytes += socketChannel.read(body);
@@ -103,9 +98,7 @@ public class ServerWorker {
                 head.clear();
                 body.clear();
 
-                isFirst = true;
-
-                getRequestAndHandle();
+                isFirstRead = true;
             }
         }
     }
@@ -143,25 +136,31 @@ public class ServerWorker {
     public synchronized void writeRes() throws IOException {
         assert !bufferQueue.isEmpty();
 
-        RequestStat requestStat = bufferQueue.poll();
+        RequestStat requestStat = bufferQueue.peek();
         ByteBuffer result = requestStat.byteBuffer;
 
-        ByteBuffer sizeBB = ByteBuffer.allocate(Constants.INT_SIZE).putInt(result.remaining());
-        sizeBB.flip();
+        if (isFirstWrite) {
+            ByteBuffer sizeBB = ByteBuffer.allocate(Constants.INT_SIZE).putInt(result.remaining());
+            sizeBB.flip();
 
-        while (sizeBB.hasRemaining()) {
-            socketChannel.write(sizeBB);
+            while (sizeBB.hasRemaining()) {
+                socketChannel.write(sizeBB);
+            }
+
+            isFirstWrite = false;
         }
 
-        while (result.hasRemaining()) {
+        if (result.hasRemaining()) {
             socketChannel.write(result);
-        }
+        } else {
+            requestStat.clientTime = System.currentTimeMillis() - requestStat.startClient;
 
-        requestStat.clientTime = System.currentTimeMillis() - requestStat.startClient;
+            isFirstWrite = true;
 
-        taskCounter -= 1;
-        if (taskCounter == 0) {
-            doneSignal.countDown();
+            taskCounter -= 1;
+            if (taskCounter == 0) {
+                doneSignal.countDown();
+            }
         }
     }
 
