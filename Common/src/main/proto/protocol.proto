@@ -24,8 +24,7 @@ message ServerData {
 }
 
 message ClientData {
-    int64 waitForTime = 1;
-    repeated RequestData requestData = 2;
+    repeated RequestData requestData = 1;
 }
 
 message RequestData {

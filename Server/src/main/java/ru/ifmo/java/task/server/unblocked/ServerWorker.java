@@ -37,8 +37,6 @@ public class ServerWorker {
 
     public ServerWorker(SocketChannel socketChannel, ExecutorService pool, ClientStat clientStat,
                         CountDownLatch doneSignal, Selector outputSelector) {
-        clientStat.startWaitFor = System.currentTimeMillis();
-
         this.socketChannel = socketChannel;
 
         this.clientStat = clientStat;

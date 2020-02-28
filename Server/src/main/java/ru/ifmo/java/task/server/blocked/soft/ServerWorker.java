@@ -25,9 +25,7 @@ public class ServerWorker extends AbstractBlockedServerWorker implements Runnabl
     @Override
     public void run() {
         try {
-            clientStat.startWaitFor = System.currentTimeMillis();
             startSignal.await();
-            clientStat.waitForTime = System.currentTimeMillis() - clientStat.startWaitFor;
 
             for (int i = 0; i < clientStat.getTasksNum(); i++) {
                 RequestStat requestStat = clientStat.registerRequest();

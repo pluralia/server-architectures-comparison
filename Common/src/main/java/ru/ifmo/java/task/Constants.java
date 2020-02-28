@@ -1,5 +1,6 @@
 package ru.ifmo.java.task;
 
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,9 @@ public class Constants {
     };
 
     public static final String LOCALHOST = "localhost";
+//    public static final byte[] LOCAL_IP = new byte[]{(byte)192, (byte)168, 1, 15};
+    public static final byte[] LOCAL_IP = new byte[]{(byte)172, (byte)131, 0, (byte)229};
+
     public static final String OUTPUT_TXT = "output.txt";
 
     public static final int INT_SIZE = 4;
@@ -30,7 +34,7 @@ public class Constants {
 
     public static final int UNBLOCKED_PORT = 1236;
 
-    public static final int COMMON_PORT = 1238;
+    public static final int COMMON_PORT = 1237;
 
     public static final Function<List<Integer>, List<Integer>> SORT = Sort::bubbleSort;
 

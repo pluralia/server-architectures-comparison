@@ -13,8 +13,10 @@ public class UIInternal {
 //                Arrays.asList(8, 12, 16, 20, 24, 28, 32), 4, 10000, 3000);
 //        new UIInternal().run(Constants.BLOCKED_SOFT, 8, 4,
 //                Arrays.asList(2000, 4000, 6000, 8000, 10000, 12000, 14000), 3000);
-        new UIInternal().run(Constants.BLOCKED_SOFT, 8, 4, 10000,
-                Arrays.asList(0, 500, 1000, 1500, 2000, 2500, 3000));
+//        new UIInternal().run(Constants.BLOCKED_SOFT, 8, 4, 10000,
+//                Arrays.asList(0, 500, 1000, 1500, 2000, 2500, 3000));
+
+        new Test(Constants.UNBLOCKED, 2, 3, 1000, 0).run();
     }
 
     public void run(String archType, List<Integer> clientNum, int taskNum, int taskSize, int sleepTime)

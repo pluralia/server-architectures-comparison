@@ -22,6 +22,8 @@ public class ClientManager {
 
         pool.shutdown();
         pool.awaitTermination(1000, TimeUnit.SECONDS);
+
+        clientStat.print();
     }
 
     public List<Long> getStat() {

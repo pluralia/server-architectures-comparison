@@ -27,8 +27,6 @@ public class AbstractBlockedServerWorker {
 
     public AbstractBlockedServerWorker(Socket socket, ClientStat clientStat,
                                        CountDownLatch startSignal, CountDownLatch doneSignal) throws IOException {
-        clientStat.startWaitFor = System.currentTimeMillis();
-
         this.socket = socket;
         input = socket.getInputStream();
         output = socket.getOutputStream();

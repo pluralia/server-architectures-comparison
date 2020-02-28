@@ -36,7 +36,6 @@ public class ServerWorker extends AbstractBlockedServerWorker {
         return () -> {
             try {
                 startSignal.await();
-                clientStat.waitForTime = System.currentTimeMillis() - clientStat.startWaitFor;
 
                 for (int i = 0; i < clientStat.getTasksNum(); i++) {
                     RequestStat requestStat = clientStat.registerRequest();

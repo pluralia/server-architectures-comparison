@@ -1,5 +1,6 @@
 package ru.ifmo.java.task.server;
 
+import org.w3c.dom.ls.LSOutput;
 import ru.ifmo.java.task.protocol.Protocol;
 
 import java.nio.ByteBuffer;
@@ -39,12 +40,15 @@ public class ServerStat {
                 .build();
     }
 
-    public static class ClientStat {
-        private final List<RequestStat> requestStatList = new ArrayList<>();
-        private final int tasksNum;
+    public void print() {
+        System.out.println("STAT");
+        clientStatList.forEach(ClientStat::print);
+    }
 
-        public long startWaitFor = 0;
-        public long waitForTime = 0;
+    public static class ClientStat {
+        private List<RequestStat> requestStatList = new ArrayList<>();
+        private final int tasksNum;
+        private boolean isNotFirst = false;
 
         public ClientStat(int tasksNum) {
             this.tasksNum = tasksNum;
@@ -58,7 +62,10 @@ public class ServerStat {
             assert requestStatList.size() > tasksNum;
 
             RequestStat requestStat = new RequestStat();
-            requestStatList.add(requestStat);
+            if (isNotFirst) {
+                requestStatList.add(requestStat);
+            }
+            isNotFirst = true;
             return requestStat;
         }
 
@@ -69,9 +76,19 @@ public class ServerStat {
                             .map(RequestStat::getStat)
                             .collect(Collectors.toList());
             return Protocol.ClientData.newBuilder()
-                    .setWaitForTime(waitForTime)
                     .addAllRequestData(requestDataList)
                     .build();
+        }
+
+        public void print() {
+            System.out.println("CLIENT");
+            requestStatList = requestStatList.stream()
+                    .filter(RequestStat::isDone)
+                    .collect(Collectors.toList());
+            for (int i = 0; i < requestStatList.size(); i++) {
+                System.out.print((i + 1) + " | ");
+                requestStatList.get(i).print();
+            }
         }
 
         public static class RequestStat {
@@ -92,6 +109,10 @@ public class ServerStat {
                         .setTaskTime(taskTime)
                         .setClientTime(clientTime)
                         .build();
+            }
+
+            public void print() {
+                System.out.println("taskTime: " + taskTime + " | clientTime: " + clientTime);
             }
         }
     }

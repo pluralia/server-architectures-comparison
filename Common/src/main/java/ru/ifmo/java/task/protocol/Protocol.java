@@ -2873,31 +2873,25 @@ public final class Protocol {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int64 waitForTime = 1;</code>
-     * @return The waitForTime.
-     */
-    long getWaitForTime();
-
-    /**
-     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
      */
     java.util.List<ru.ifmo.java.task.protocol.Protocol.RequestData> 
         getRequestDataList();
     /**
-     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
      */
     ru.ifmo.java.task.protocol.Protocol.RequestData getRequestData(int index);
     /**
-     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
      */
     int getRequestDataCount();
     /**
-     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
      */
     java.util.List<? extends ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder> 
         getRequestDataOrBuilderList();
     /**
-     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
      */
     ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder getRequestDataOrBuilder(
         int index);
@@ -2949,12 +2943,7 @@ public final class Protocol {
             case 0:
               done = true;
               break;
-            case 8: {
-
-              waitForTime_ = input.readInt64();
-              break;
-            }
-            case 18: {
+            case 10: {
               if (!((mutable_bitField0_ & 0x00000001) != 0)) {
                 requestData_ = new java.util.ArrayList<ru.ifmo.java.task.protocol.Protocol.RequestData>();
                 mutable_bitField0_ |= 0x00000001;
@@ -2998,45 +2987,35 @@ public final class Protocol {
               ru.ifmo.java.task.protocol.Protocol.ClientData.class, ru.ifmo.java.task.protocol.Protocol.ClientData.Builder.class);
     }
 
-    public static final int WAITFORTIME_FIELD_NUMBER = 1;
-    private long waitForTime_;
-    /**
-     * <code>int64 waitForTime = 1;</code>
-     * @return The waitForTime.
-     */
-    public long getWaitForTime() {
-      return waitForTime_;
-    }
-
-    public static final int REQUESTDATA_FIELD_NUMBER = 2;
+    public static final int REQUESTDATA_FIELD_NUMBER = 1;
     private java.util.List<ru.ifmo.java.task.protocol.Protocol.RequestData> requestData_;
     /**
-     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
      */
     public java.util.List<ru.ifmo.java.task.protocol.Protocol.RequestData> getRequestDataList() {
       return requestData_;
     }
     /**
-     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
      */
     public java.util.List<? extends ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder> 
         getRequestDataOrBuilderList() {
       return requestData_;
     }
     /**
-     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
      */
     public int getRequestDataCount() {
       return requestData_.size();
     }
     /**
-     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
      */
     public ru.ifmo.java.task.protocol.Protocol.RequestData getRequestData(int index) {
       return requestData_.get(index);
     }
     /**
-     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+     * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
      */
     public ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder getRequestDataOrBuilder(
         int index) {
@@ -3057,11 +3036,8 @@ public final class Protocol {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (waitForTime_ != 0L) {
-        output.writeInt64(1, waitForTime_);
-      }
       for (int i = 0; i < requestData_.size(); i++) {
-        output.writeMessage(2, requestData_.get(i));
+        output.writeMessage(1, requestData_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -3072,13 +3048,9 @@ public final class Protocol {
       if (size != -1) return size;
 
       size = 0;
-      if (waitForTime_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, waitForTime_);
-      }
       for (int i = 0; i < requestData_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, requestData_.get(i));
+          .computeMessageSize(1, requestData_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3095,8 +3067,6 @@ public final class Protocol {
       }
       ru.ifmo.java.task.protocol.Protocol.ClientData other = (ru.ifmo.java.task.protocol.Protocol.ClientData) obj;
 
-      if (getWaitForTime()
-          != other.getWaitForTime()) return false;
       if (!getRequestDataList()
           .equals(other.getRequestDataList())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -3110,9 +3080,6 @@ public final class Protocol {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + WAITFORTIME_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getWaitForTime());
       if (getRequestDataCount() > 0) {
         hash = (37 * hash) + REQUESTDATA_FIELD_NUMBER;
         hash = (53 * hash) + getRequestDataList().hashCode();
@@ -3251,8 +3218,6 @@ public final class Protocol {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        waitForTime_ = 0L;
-
         if (requestDataBuilder_ == null) {
           requestData_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000001);
@@ -3286,7 +3251,6 @@ public final class Protocol {
       public ru.ifmo.java.task.protocol.Protocol.ClientData buildPartial() {
         ru.ifmo.java.task.protocol.Protocol.ClientData result = new ru.ifmo.java.task.protocol.Protocol.ClientData(this);
         int from_bitField0_ = bitField0_;
-        result.waitForTime_ = waitForTime_;
         if (requestDataBuilder_ == null) {
           if (((bitField0_ & 0x00000001) != 0)) {
             requestData_ = java.util.Collections.unmodifiableList(requestData_);
@@ -3344,9 +3308,6 @@ public final class Protocol {
 
       public Builder mergeFrom(ru.ifmo.java.task.protocol.Protocol.ClientData other) {
         if (other == ru.ifmo.java.task.protocol.Protocol.ClientData.getDefaultInstance()) return this;
-        if (other.getWaitForTime() != 0L) {
-          setWaitForTime(other.getWaitForTime());
-        }
         if (requestDataBuilder_ == null) {
           if (!other.requestData_.isEmpty()) {
             if (requestData_.isEmpty()) {
@@ -3403,36 +3364,6 @@ public final class Protocol {
       }
       private int bitField0_;
 
-      private long waitForTime_ ;
-      /**
-       * <code>int64 waitForTime = 1;</code>
-       * @return The waitForTime.
-       */
-      public long getWaitForTime() {
-        return waitForTime_;
-      }
-      /**
-       * <code>int64 waitForTime = 1;</code>
-       * @param value The waitForTime to set.
-       * @return This builder for chaining.
-       */
-      public Builder setWaitForTime(long value) {
-        
-        waitForTime_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int64 waitForTime = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearWaitForTime() {
-        
-        waitForTime_ = 0L;
-        onChanged();
-        return this;
-      }
-
       private java.util.List<ru.ifmo.java.task.protocol.Protocol.RequestData> requestData_ =
         java.util.Collections.emptyList();
       private void ensureRequestDataIsMutable() {
@@ -3446,7 +3377,7 @@ public final class Protocol {
           ru.ifmo.java.task.protocol.Protocol.RequestData, ru.ifmo.java.task.protocol.Protocol.RequestData.Builder, ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder> requestDataBuilder_;
 
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public java.util.List<ru.ifmo.java.task.protocol.Protocol.RequestData> getRequestDataList() {
         if (requestDataBuilder_ == null) {
@@ -3456,7 +3387,7 @@ public final class Protocol {
         }
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public int getRequestDataCount() {
         if (requestDataBuilder_ == null) {
@@ -3466,7 +3397,7 @@ public final class Protocol {
         }
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public ru.ifmo.java.task.protocol.Protocol.RequestData getRequestData(int index) {
         if (requestDataBuilder_ == null) {
@@ -3476,7 +3407,7 @@ public final class Protocol {
         }
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public Builder setRequestData(
           int index, ru.ifmo.java.task.protocol.Protocol.RequestData value) {
@@ -3493,7 +3424,7 @@ public final class Protocol {
         return this;
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public Builder setRequestData(
           int index, ru.ifmo.java.task.protocol.Protocol.RequestData.Builder builderForValue) {
@@ -3507,7 +3438,7 @@ public final class Protocol {
         return this;
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public Builder addRequestData(ru.ifmo.java.task.protocol.Protocol.RequestData value) {
         if (requestDataBuilder_ == null) {
@@ -3523,7 +3454,7 @@ public final class Protocol {
         return this;
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public Builder addRequestData(
           int index, ru.ifmo.java.task.protocol.Protocol.RequestData value) {
@@ -3540,7 +3471,7 @@ public final class Protocol {
         return this;
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public Builder addRequestData(
           ru.ifmo.java.task.protocol.Protocol.RequestData.Builder builderForValue) {
@@ -3554,7 +3485,7 @@ public final class Protocol {
         return this;
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public Builder addRequestData(
           int index, ru.ifmo.java.task.protocol.Protocol.RequestData.Builder builderForValue) {
@@ -3568,7 +3499,7 @@ public final class Protocol {
         return this;
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public Builder addAllRequestData(
           java.lang.Iterable<? extends ru.ifmo.java.task.protocol.Protocol.RequestData> values) {
@@ -3583,7 +3514,7 @@ public final class Protocol {
         return this;
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public Builder clearRequestData() {
         if (requestDataBuilder_ == null) {
@@ -3596,7 +3527,7 @@ public final class Protocol {
         return this;
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public Builder removeRequestData(int index) {
         if (requestDataBuilder_ == null) {
@@ -3609,14 +3540,14 @@ public final class Protocol {
         return this;
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public ru.ifmo.java.task.protocol.Protocol.RequestData.Builder getRequestDataBuilder(
           int index) {
         return getRequestDataFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder getRequestDataOrBuilder(
           int index) {
@@ -3626,7 +3557,7 @@ public final class Protocol {
         }
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public java.util.List<? extends ru.ifmo.java.task.protocol.Protocol.RequestDataOrBuilder> 
            getRequestDataOrBuilderList() {
@@ -3637,14 +3568,14 @@ public final class Protocol {
         }
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public ru.ifmo.java.task.protocol.Protocol.RequestData.Builder addRequestDataBuilder() {
         return getRequestDataFieldBuilder().addBuilder(
             ru.ifmo.java.task.protocol.Protocol.RequestData.getDefaultInstance());
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public ru.ifmo.java.task.protocol.Protocol.RequestData.Builder addRequestDataBuilder(
           int index) {
@@ -3652,7 +3583,7 @@ public final class Protocol {
             index, ru.ifmo.java.task.protocol.Protocol.RequestData.getDefaultInstance());
       }
       /**
-       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 2;</code>
+       * <code>repeated .ru.ifmo.java.task.protocol.RequestData requestData = 1;</code>
        */
       public java.util.List<ru.ifmo.java.task.protocol.Protocol.RequestData.Builder> 
            getRequestDataBuilderList() {
@@ -4326,11 +4257,11 @@ public final class Protocol {
       "\003(\005\"D\n\014ServerConfig\022\020\n\010archType\030\001 \001(\t\022\021\n" +
       "\tclientNum\030\002 \001(\005\022\017\n\007taskNum\030\003 \001(\005\"H\n\nSer" +
       "verData\022:\n\nclientData\030\001 \003(\0132&.ru.ifmo.ja" +
-      "va.task.protocol.ClientData\"_\n\nClientDat" +
-      "a\022\023\n\013waitForTime\030\001 \001(\003\022<\n\013requestData\030\002 " +
-      "\003(\0132\'.ru.ifmo.java.task.protocol.Request" +
-      "Data\"3\n\013RequestData\022\020\n\010taskTime\030\001 \001(\003\022\022\n" +
-      "\nclientTime\030\002 \001(\003b\006proto3"
+      "va.task.protocol.ClientData\"J\n\nClientDat" +
+      "a\022<\n\013requestData\030\001 \003(\0132\'.ru.ifmo.java.ta" +
+      "sk.protocol.RequestData\"3\n\013RequestData\022\020" +
+      "\n\010taskTime\030\001 \001(\003\022\022\n\nclientTime\030\002 \001(\003b\006pr" +
+      "oto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -4365,7 +4296,7 @@ public final class Protocol {
     internal_static_ru_ifmo_java_task_protocol_ClientData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ru_ifmo_java_task_protocol_ClientData_descriptor,
-        new java.lang.String[] { "WaitForTime", "RequestData", });
+        new java.lang.String[] { "RequestData", });
     internal_static_ru_ifmo_java_task_protocol_RequestData_descriptor =
       getDescriptor().getMessageTypes().get(5);
     internal_static_ru_ifmo_java_task_protocol_RequestData_fieldAccessorTable = new

@@ -89,12 +89,7 @@ public class UnblockedServer extends AbstractServer {
                             ServerWorker serverWorker = (ServerWorker) selectionKey.attachment();
                             assert serverWorker != null;
 
-                            ClientStat clientStat = serverWorker.getClientStat();
-                            if (clientStat.waitForTime == 0) {
-                                clientStat.waitForTime =
-                                        System.currentTimeMillis() - clientStat.startWaitFor;
-                            }
-
+//                            ClientStat clientStat = serverWorker.getClientStat();
                             serverWorker.getRequestAndHandle();
                         }
 

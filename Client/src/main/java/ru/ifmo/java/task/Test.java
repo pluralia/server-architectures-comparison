@@ -4,7 +4,6 @@ import ru.ifmo.java.task.client.ClientManager;
 import ru.ifmo.java.task.protocol.Protocol;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 
 import java.util.List;
@@ -12,6 +11,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Test {
+    public static void main(String[] args) throws InterruptedException, IOException {
+        new Test(Constants.UNBLOCKED, 2, 10, 10000, 0).run();
+    }
+
     private final String archType;
     private final int clientNum;
     private final int taskNum;
@@ -27,9 +30,8 @@ public class Test {
     }
 
     public String run() throws InterruptedException, IOException {
-        InetAddress inetAddress = InetAddress.getByAddress(new byte[]{(byte)192, (byte)168, 1, 15});
-        Socket socket = new Socket(inetAddress, Constants.COMMON_PORT);
-//        Socket socket = new Socket(Constants.LOCALHOST, Constants.COMMON_PORT);
+//        Socket socket = new Socket(InetAddress.getByAddress(Constants.LOCAL_IP), Constants.COMMON_PORT);
+        Socket socket = new Socket(Constants.LOCALHOST, Constants.COMMON_PORT);
 
         sendConfigData(socket);
 
@@ -74,18 +76,19 @@ public class Test {
 
             long numOfCompletedTasks = clientData.getRequestDataList().size();
 
-            long waitForTime = clientData.getWaitForTime();
-            responseTime += (clientStat.get(i) - waitForTime) / numOfCompletedTasks;
+            if (numOfCompletedTasks > 0) {
+                responseTime += clientStat.get(i) / numOfCompletedTasks;
 
-            taskTime += clientData.getRequestDataList()
-                    .stream()
-                    .mapToLong(Protocol.RequestData::getTaskTime)
-                    .average().orElse(0);
+                taskTime += clientData.getRequestDataList()
+                        .stream()
+                        .mapToLong(Protocol.RequestData::getTaskTime)
+                        .average().orElse(0);
 
-            clientTime += clientData.getRequestDataList()
-                    .stream()
-                    .mapToLong(Protocol.RequestData::getClientTime)
-                    .average().orElse(0);
+                clientTime += clientData.getRequestDataList()
+                        .stream()
+                        .mapToLong(Protocol.RequestData::getClientTime)
+                        .average().orElse(0);
+            }
         }
 
         return Stream.of(responseTime, taskTime, clientTime)

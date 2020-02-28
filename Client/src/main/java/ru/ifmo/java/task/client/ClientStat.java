@@ -17,4 +17,8 @@ public class ClientStat {
     public List<Long> getStat() {
         return statList.stream().map(AtomicLong::get).collect(Collectors.toList());
     }
+
+    public void print() {
+        statList.forEach(System.out::println);
+    }
 }
