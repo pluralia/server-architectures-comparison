@@ -14,10 +14,9 @@ public class ServerManager {
     private AbstractServer server;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-//        for (int i = 0; i < 7; i++) {
-//            new ServerManager().run();
-//        }
-        new ServerManager().run();
+        for (int i = 0; i < 7; i++) {
+            new ServerManager().run();
+        }
     }
 
     public void run() throws IOException, InterruptedException {

@@ -9,8 +9,8 @@ import java.util.stream.Stream;
 
 public class UIInternal {
     public static void main(String[] args) throws InterruptedException, IOException {
-//        new UIInternal().run(Constants.BLOCKED_SOFT,
-//                Arrays.asList(8, 12, 16, 20, 24, 28, 32), 4, 10000, 3000);
+        new UIInternal().run(Constants.UNBLOCKED,
+                Arrays.asList(8, 12, 16, 20, 24, 28, 32), 4, 10000, 3000);
 //        new UIInternal().run(Constants.BLOCKED_SOFT, 8, 4,
 //                Arrays.asList(2000, 4000, 6000, 8000, 10000, 12000, 14000), 3000);
 //        new UIInternal().run(Constants.BLOCKED_SOFT, 8, 4, 10000,

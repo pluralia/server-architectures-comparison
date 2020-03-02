@@ -8,13 +8,13 @@ import ru.ifmo.java.task.protocol.Protocol.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 public class Client implements Runnable {
     private final Random rand = new Random();
@@ -34,8 +34,8 @@ public class Client implements Runnable {
         this.sleepTime = sleepTime;
         this.stat = stat;
 
-//        socket = new Socket(InetAddress.getByAddress(Constants.LOCAL_IP), port);
-        socket = new Socket(Constants.LOCALHOST, port);
+        socket = new Socket(InetAddress.getByAddress(Constants.LOCAL_IP), port);
+//        socket = new Socket(Constants.LOCALHOST, port);
         input = socket.getInputStream();
         output = socket.getOutputStream();
     }
@@ -87,10 +87,10 @@ public class Client implements Runnable {
         byte[] protoBuf = Lib.receive(input);
         Response response = Response.parseFrom(protoBuf);
 
-        System.out.println(response.getSize());
-        System.out.println(response.getElemList().stream()
-                .map(Object::toString)
-                .collect(Collectors.joining(" ")));
+//        System.out.println(response.getSize());
+//        System.out.println(response.getElemList().stream()
+//                .map(Object::toString)
+//                .collect(Collectors.joining(" ")));
 
         return response.getElemList().size() == taskSize;
     }

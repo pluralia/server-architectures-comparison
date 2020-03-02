@@ -4,6 +4,7 @@ import ru.ifmo.java.task.client.ClientManager;
 import ru.ifmo.java.task.protocol.Protocol;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
 
 public class Test {
     public static void main(String[] args) throws InterruptedException, IOException {
-        new Test(Constants.UNBLOCKED, 2, 3, 10000, 1000).run();
+        new Test(Constants.UNBLOCKED, 10, 8, 1000, 1000).run();
     }
 
     private final String archType;
@@ -24,14 +25,14 @@ public class Test {
     public Test(String archType, int clientNum, int taskNum, int taskSize, int sleepTime) {
         this.archType = archType;
         this.clientNum = clientNum;
-        this.taskNum = taskNum;
+        this.taskNum = taskNum + 1;
         this.taskSize = taskSize;
         this.sleepTime = sleepTime;
     }
 
     public String run() throws InterruptedException, IOException {
-//        Socket socket = new Socket(InetAddress.getByAddress(Constants.LOCAL_IP), Constants.COMMON_PORT);
-        Socket socket = new Socket(Constants.LOCALHOST, Constants.COMMON_PORT);
+        Socket socket = new Socket(InetAddress.getByAddress(Constants.LOCAL_IP), Constants.COMMON_PORT);
+//        Socket socket = new Socket(Constants.LOCALHOST, Constants.COMMON_PORT);
 
         sendConfigData(socket);
 

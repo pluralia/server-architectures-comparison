@@ -53,10 +53,6 @@ public class ServerWorker {
         return socketChannel;
     }
 
-    public ClientStat getClientStat() {
-        return clientStat;
-    }
-
     public void close() throws IOException {
         socketChannel.close();
     }
@@ -70,8 +66,6 @@ public class ServerWorker {
 
         if (isSizeReading) {
             numOfBytes += socketChannel.read(head);
-            socketChannel.read(head);
-
             if (numOfBytes == Constants.INT_SIZE) {
                 head.flip();
                 size = head.getInt();
@@ -137,10 +131,9 @@ public class ServerWorker {
         assert !bufferQueue.isEmpty();
 
         RequestStat requestStat = bufferQueue.peek();
-        ByteBuffer result = requestStat.byteBuffer;
 
         if (isFirstWrite) {
-            ByteBuffer sizeBB = ByteBuffer.allocate(Constants.INT_SIZE).putInt(result.remaining());
+            ByteBuffer sizeBB = ByteBuffer.allocate(Constants.INT_SIZE).putInt(requestStat.byteBuffer.remaining());
             sizeBB.flip();
 
             while (sizeBB.hasRemaining()) {
@@ -150,12 +143,15 @@ public class ServerWorker {
             isFirstWrite = false;
         }
 
-        if (result.hasRemaining()) {
-            socketChannel.write(result);
-        } else {
+        if (requestStat.byteBuffer.hasRemaining()) {
+            socketChannel.write(requestStat.byteBuffer);
+        }
+
+        if (!requestStat.byteBuffer.hasRemaining()) {
             requestStat.clientTime = System.currentTimeMillis() - requestStat.startClient;
 
             isFirstWrite = true;
+            bufferQueue.poll();
 
             taskCounter -= 1;
             if (taskCounter == 0) {

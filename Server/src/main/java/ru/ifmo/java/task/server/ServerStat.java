@@ -82,9 +82,9 @@ public class ServerStat {
 
         public void print() {
             System.out.println("CLIENT");
-//            requestStatList = requestStatList.stream()
-//                    .filter(RequestStat::isDone)
-//                    .collect(Collectors.toList());
+            requestStatList = requestStatList.stream()
+                    .filter(RequestStat::isDone)
+                    .collect(Collectors.toList());
             for (int i = 0; i < requestStatList.size(); i++) {
                 System.out.print((i + 1) + " | ");
                 requestStatList.get(i).print();

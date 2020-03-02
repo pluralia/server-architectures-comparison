@@ -2,7 +2,6 @@ package ru.ifmo.java.task.server.unblocked;
 
 import ru.ifmo.java.task.Constants;
 import ru.ifmo.java.task.server.ServerStat;
-import ru.ifmo.java.task.server.ServerStat.*;
 import ru.ifmo.java.task.server.AbstractServer;
 
 import java.io.IOException;
