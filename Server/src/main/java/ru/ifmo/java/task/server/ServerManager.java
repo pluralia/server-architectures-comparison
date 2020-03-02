@@ -14,7 +14,7 @@ public class ServerManager {
     private AbstractServer server;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < Constants.execNum; i++) {
             new ServerManager().run();
         }
     }
@@ -26,7 +26,7 @@ public class ServerManager {
         Protocol.ServerConfig serverConfig =
                 Protocol.ServerConfig.parseDelimitedFrom(socket.getInputStream());
 
-        System.out.println("CONGIF --> SERVER");
+        System.out.println("CONFIG --> SERVER");
 
         ServerStat serverStat = new ServerStat(serverConfig.getClientNum(), serverConfig.getTaskNum());
 
